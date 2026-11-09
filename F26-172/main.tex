@@ -1952,29 +1952,7 @@ Several trade-offs shape the implementation. A 7--8B base model loaded in 4-bit 
 \section{Conclusion}
 This chapter presented the design of DiploMind. It gave an overview of the system and its five modules, and described the assumptions, dependencies, constraints, and guidelines that shaped the design. The architecture was divided into an offline preparation part and an online learning part, with a subsystem view of each module. The architectural strategies explained the choice of one shared base model with six adapters, retrieval-augmented generation, a client-server model, and a NoSQL database alongside a vector database. Sequence diagrams showed the main learner flows, and the policies and tactics recorded the choices made on algorithms, safe exploration, grounding, privacy, and testing, along with the alternatives that were rejected. Together, these decisions keep explanations grounded in sources, personalization safe for the learner, and each component replaceable, and they provide the basis for implementation.
 
-\begin{comment}
-\section{Policies and Tactics}
-Describe any design policies and/or tactics that do not have sweeping architectural implications (meaning they would not significantly affect the overall organization of the system and its high-level structures) but which nonetheless affect the details of the interface and/or implementation of various aspects of the system. Such decisions might concern (but are not limited to) things like the following:
-\begin{itemize}
-    \item Choice of which specific product to use (compiler, interpreter, database, library, etc. ...) 
- \item Engineering trade-offs 
- \item	Coding guidelines and conventions 
- \item	The protocol of one or more subsystems, modules, or subroutines 
- \item The choice of a particular algorithm or programming idiom (design pattern) to implement portions of the system's functionality 
- \item	Plans for ensuring requirements traceability 
- \item	Plans for testing the software 
- \item	Plans for maintaining the software 
- \item	Interfaces for end-users, software, hardware, and communications 
- \item	Hierarchical organization of the source code into its physical components (files and directories). 
- \item	How to build and/or generate the system's deliverables (how to compile, link, load, etc. ...) 
-\end{itemize}
-\subsection{Policy/tactic-1 name or description}
-\subsection{Policy/tactic-2 name or description}
-Each particular policy or set of tactics employed should probably be discussed in its own subsection, or (if it is large or complex enough) in a separate design document (with an appropriate reference here of course). Make sure that when describing a design decision that you also discuss any other significant alternatives that were considered, and your reasons for rejecting them (as well as your reasons for accepting the alternative you finally chose). For this reason, it may frequently be convenient to use one of the more popular "pattern formats" to describe a given tactic.\\
-For this particular section, it may become difficult to decide whether a particular policy or set of tactics should be discussed in this section, or in the System Architecture section, or in the Detailed System Design section for the appropriate component. You will have to use your own "best" judgment to decide this. There will usually be some global policies and tactics that should be discussed here. Still, decisions about interfaces, algorithms, and/or data structures might be more appropriately discussed in the same (sub) section as its corresponding software component in one of these other sections.  
-\end{comment}
 
-\begin{comment}
 \chapter{Implementation and Test Cases}
 For each chapter, provide a paragraph of introduction and at the end, a paragraph of conclusions. (Not the programming code but the algorithmic and procedural details especially related to the hidden/ backend algorithms that are not covered in the design)
 \section{Implementation}
@@ -1983,6 +1961,8 @@ Give clear details of the algorithms that were implemented along with the platfo
 \textcolor{red}{NOTE: For FYP-1, this chapter can be changed to description of prototype developed.}
 \subsection{Implementation of First Component/Algorithm}
 Write the implementation of the first component of your system here.
+
+\begin{comment}
 \section{Test case Design and description}
 \textcolor{red}{This section will be added in FYP-II.} Summarize the common attributes of test cases. This may include input constraints that must be true for every input in the set of associated test cases, any shared environmental needs, any shared special procedural requirements, and any shared case dependencies. The following scheme is recommended for describing test cases in detail. The Sample test case is provided in table \ref{tab:3}.
 \begin{table}[!ht]
@@ -2054,11 +2034,9 @@ Similar to the above table, add here for test metrics 2,3,4.\\
 \textcolor{red}{NOTE: This Chapter is optional for Research projects but compulsory for Development projects.}\\ 
 \end{comment}
 
-\begin{comment}
 \chapter{Experimental Results and Discussion}
 This chapter will be added in FYP-II. Give proper analysis and discussion of experimental results (in plain English text) along with tables of results.  For each chapter provide a paragraph of introduction and in the end a paragraph of conclusions.\\
 \textcolor{red}{NOTE: This Chapter is optional for Development projects but compulsory for Research projects.}
-\end{comment}
 
 \begin{comment}
 \chapter{Conclusions}

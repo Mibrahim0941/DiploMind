@@ -1,0 +1,195 @@
+\contentsline {chapter}{List of Figures}{vii}{Doc-Start}%
+\contentsline {chapter}{List of Tables}{viii}{Doc-Start}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Purpose of this Document}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Intended Audience}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Definitions, Acronyms, and Abbreviations}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Conclusion}{3}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Project Vision}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Problem Domain Overview}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Problem Statement}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Problem Elaboration}{5}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Scattered and Uneven Content}{5}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Mismatch of Language and Depth}{5}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}No Starting Point for New Readers}{5}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}No Check on Understanding}{5}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Changing Reader Needs}{5}{subsection.2.3.5}%
+\contentsline {section}{\numberline {2.4}Goals and Objectives}{5}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Goals}{5}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Objectives}{6}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Project Scope}{6}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Sustainable Development Goals}{7}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Conclusion}{7}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Literature Review / Related Work}{8}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Definitions, Acronyms, and Abbreviations}{8}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Detailed Literature Review}{8}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Composing Parameter-Efficient Modules with Arithmetic Operations}{9}{subsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.1}Summary of the research item}{9}{subsubsection.3.2.1.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.2}Critical analysis of the research item}{9}{subsubsection.3.2.1.2}%
+\contentsline {subsubsection}{\numberline {3.2.1.3}Relationship to the proposed research work}{9}{subsubsection.3.2.1.3}%
+\contentsline {subsection}{\numberline {3.2.2}LoraHub: Efficient Cross-Task Generalization via Dynamic LoRA Composition}{9}{subsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.1}Summary of the research item}{10}{subsubsection.3.2.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2.2}Critical analysis of the research item}{10}{subsubsection.3.2.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.3}Relationship to the proposed research work}{10}{subsubsection.3.2.2.3}%
+\contentsline {subsection}{\numberline {3.2.3}From Problem-Solving to Teaching Problem-Solving: Aligning LLMs with Pedagogy using Reinforcement Learning}{10}{subsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.3.1}Summary of the research item}{11}{subsubsection.3.2.3.1}%
+\contentsline {subsubsection}{\numberline {3.2.3.2}Critical analysis of the research item}{11}{subsubsection.3.2.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.3.3}Relationship to the proposed research work}{11}{subsubsection.3.2.3.3}%
+\contentsline {subsection}{\numberline {3.2.4}Personalized Language Modeling from Personalized Human Feedback}{12}{subsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4.1}Summary of the research item}{12}{subsubsection.3.2.4.1}%
+\contentsline {subsubsection}{\numberline {3.2.4.2}Critical analysis of the research item}{12}{subsubsection.3.2.4.2}%
+\contentsline {subsubsection}{\numberline {3.2.4.3}Relationship to the proposed research work}{13}{subsubsection.3.2.4.3}%
+\contentsline {subsection}{\numberline {3.2.5}ERUPD: English to Roman Urdu Parallel Dataset}{13}{subsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.5.1}Summary of the research item}{13}{subsubsection.3.2.5.1}%
+\contentsline {subsubsection}{\numberline {3.2.5.2}Critical analysis of the research item}{13}{subsubsection.3.2.5.2}%
+\contentsline {subsubsection}{\numberline {3.2.5.3}Relationship to the proposed research work}{14}{subsubsection.3.2.5.3}%
+\contentsline {subsection}{\numberline {3.2.6}Personalized Soups: Personalized Large Language Model Alignment via Post-HOC Parameter Merging}{14}{subsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.6.1}Summary of the research item}{14}{subsubsection.3.2.6.1}%
+\contentsline {subsubsection}{\numberline {3.2.6.2}Critical analysis of the research item}{14}{subsubsection.3.2.6.2}%
+\contentsline {subsubsection}{\numberline {3.2.6.3}Relationship to the proposed research work}{15}{subsubsection.3.2.6.3}%
+\contentsline {subsection}{\numberline {3.2.7}A Contextual-Bandit Approach to Personalized News Article Recommendation}{15}{subsection.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.7.1}Summary of the research item}{15}{subsubsection.3.2.7.1}%
+\contentsline {subsubsection}{\numberline {3.2.7.2}Critical analysis of the research item}{15}{subsubsection.3.2.7.2}%
+\contentsline {subsubsection}{\numberline {3.2.7.3}Relationship to the proposed research work}{16}{subsubsection.3.2.7.3}%
+\contentsline {subsection}{\numberline {3.2.8}LPITutor: an LLM based Personalized Intelligent Tutoring System using RAG and Prompt Engineering}{16}{subsection.3.2.8}%
+\contentsline {subsubsection}{\numberline {3.2.8.1}Summary of the research item}{16}{subsubsection.3.2.8.1}%
+\contentsline {subsubsection}{\numberline {3.2.8.2}Critical analysis of the research item}{17}{subsubsection.3.2.8.2}%
+\contentsline {subsubsection}{\numberline {3.2.8.3}Relationship to the proposed research work}{17}{subsubsection.3.2.8.3}%
+\contentsline {subsection}{\numberline {3.2.9}AI-Driven Personalized Learning and Remedial Recommendation Through Knowledge Concept-Centric Evaluation}{17}{subsection.3.2.9}%
+\contentsline {subsubsection}{\numberline {3.2.9.1}Summary of the research item}{17}{subsubsection.3.2.9.1}%
+\contentsline {subsubsection}{\numberline {3.2.9.2}Critical analysis of the research item}{18}{subsubsection.3.2.9.2}%
+\contentsline {subsubsection}{\numberline {3.2.9.3}Relationship to the proposed research work}{18}{subsubsection.3.2.9.3}%
+\contentsline {subsection}{\numberline {3.2.10}Multilingual Retrieval-Augmented Generation for Knowledge-Intensive Question Answering Task}{18}{subsection.3.2.10}%
+\contentsline {subsubsection}{\numberline {3.2.10.1}Summary of the research item}{19}{subsubsection.3.2.10.1}%
+\contentsline {subsubsection}{\numberline {3.2.10.2}Critical analysis of the research item}{19}{subsubsection.3.2.10.2}%
+\contentsline {subsubsection}{\numberline {3.2.10.3}Relationship to the proposed research work}{19}{subsubsection.3.2.10.3}%
+\contentsline {subsection}{\numberline {3.2.11}Personalized Learning Path Planning through Goal-Driven Learner State Modeling (Pxplore)}{20}{subsection.3.2.11}%
+\contentsline {subsubsection}{\numberline {3.2.11.1}Summary of the research item}{20}{subsubsection.3.2.11.1}%
+\contentsline {subsubsection}{\numberline {3.2.11.2}Critical analysis of the research item}{20}{subsubsection.3.2.11.2}%
+\contentsline {subsubsection}{\numberline {3.2.11.3}Relationship to the proposed research work}{21}{subsubsection.3.2.11.3}%
+\contentsline {subsection}{\numberline {3.2.12}Corrective Retrieval Augmented Generation}{21}{subsection.3.2.12}%
+\contentsline {subsubsection}{\numberline {3.2.12.1}Summary of the research item}{21}{subsubsection.3.2.12.1}%
+\contentsline {subsubsection}{\numberline {3.2.12.2}Critical analysis of the research item}{22}{subsubsection.3.2.12.2}%
+\contentsline {subsubsection}{\numberline {3.2.12.3}Relationship to the proposed research work}{22}{subsubsection.3.2.12.3}%
+\contentsline {subsection}{\numberline {3.2.13}Cluster-Based Bandits: Fast Cold-Start for Recommender System New Users}{23}{subsection.3.2.13}%
+\contentsline {subsubsection}{\numberline {3.2.13.1}Summary of the research item}{23}{subsubsection.3.2.13.1}%
+\contentsline {subsubsection}{\numberline {3.2.13.2}Critical analysis of the research item}{23}{subsubsection.3.2.13.2}%
+\contentsline {subsubsection}{\numberline {3.2.13.3}Relationship to the proposed research work}{23}{subsubsection.3.2.13.3}%
+\contentsline {subsection}{\numberline {3.2.14}PrepMate: An AI-Powered RAG System with News Summarization and Integrated Chatbot for Indian Languages}{24}{subsection.3.2.14}%
+\contentsline {subsubsection}{\numberline {3.2.14.1}Summary of the research item}{24}{subsubsection.3.2.14.1}%
+\contentsline {subsubsection}{\numberline {3.2.14.2}Critical analysis of the research item}{24}{subsubsection.3.2.14.2}%
+\contentsline {subsubsection}{\numberline {3.2.14.3}Relationship to the proposed research work}{24}{subsubsection.3.2.14.3}%
+\contentsline {subsection}{\numberline {3.2.15}Can Large Language Models Understand, Reason About, and Generate Code-Switched Text?}{25}{subsection.3.2.15}%
+\contentsline {subsubsection}{\numberline {3.2.15.1}Summary of the research item}{25}{subsubsection.3.2.15.1}%
+\contentsline {subsubsection}{\numberline {3.2.15.2}Critical analysis of the research item}{25}{subsubsection.3.2.15.2}%
+\contentsline {subsubsection}{\numberline {3.2.15.3}Relationship to the proposed research work}{26}{subsubsection.3.2.15.3}%
+\contentsline {subsection}{\numberline {3.2.16}Edu-Theater: A Data-Efficient Agent Framework for Scalable Learner Behavior Simulation through Staging Roll-Call}{26}{subsection.3.2.16}%
+\contentsline {subsubsection}{\numberline {3.2.16.1}Summary of the research item}{26}{subsubsection.3.2.16.1}%
+\contentsline {subsubsection}{\numberline {3.2.16.2}Critical analysis of the research item}{26}{subsubsection.3.2.16.2}%
+\contentsline {subsubsection}{\numberline {3.2.16.3}Relationship to the proposed research work}{27}{subsubsection.3.2.16.3}%
+\contentsline {section}{\numberline {3.3}Literature Review Summary Table}{27}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Conclusion}{33}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Software Requirement Specifications}{34}{chapter.4}%
+\contentsline {section}{\numberline {4.1}List of Features}{34}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Functional Requirements}{34}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Quality Attributes}{35}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Non-Functional Requirements}{36}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Assumptions}{36}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Use Cases}{37}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Hardware and Software Requirements}{43}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Hardware Requirements}{43}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Software Requirements}{43}{subsection.4.7.2}%
+\contentsline {section}{\numberline {4.8}Graphical User Interface}{44}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Database Design}{47}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Data Dictionary}{47}{subsection.4.9.1}%
+\contentsline {section}{\numberline {4.10} Risk Analysis}{49}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}Technical Risks}{49}{subsection.4.10.1}%
+\contentsline {subsection}{\numberline {4.10.2}Business Risks}{49}{subsection.4.10.2}%
+\contentsline {section}{\numberline {4.11}Conclusion}{50}{section.4.11}%
+\contentsline {chapter}{\numberline {5}Proposed Approach and Methodology}{51}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Overview of the Proposed Approach}{51}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Data Collection and Dataset Construction}{52}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Source Selection and Scraping}{52}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Cleaning, Filtering and Deduplication}{52}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Knowledge Base Construction}{53}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}Building the Language Variants (English, Urdu, Urdish)}{53}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Building the Depth Variants (Easy, Medium, Technical)}{53}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}Training Pairs and Splits}{54}{subsection.5.2.6}%
+\contentsline {section}{\numberline {5.3}Adapter Training and Composition}{55}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Training}{55}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Composition}{55}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Onboarding Quiz and Group Assignment}{55}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Question Design}{55}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Scoring and Group Assignment}{56}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Future Work: Adaptive Question Selection}{56}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}Retrieval and Grounded Generation}{56}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Retrieval}{57}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Retrieval Check and Knowledge Correction}{58}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Generation}{58}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}Adaptive Adapter Selection with LinUCB}{59}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Reward Design and the Post-Explanation Quiz}{60}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Quiz Generation}{60}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Reward}{60}{subsection.5.7.2}%
+\contentsline {section}{\numberline {5.8}Drift Detection and Group Reassignment}{60}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Offline Improvement Loop (Slow Loop)}{61}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Conclusion}{62}{section.5.10}%
+\contentsline {chapter}{\numberline {6}High-Level and Low-Level Design}{63}{chapter.6}%
+\contentsline {section}{\numberline {6.1}System Overview}{63}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}DiploMind Modules}{63}{subsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.1.1}Data Scraping Module}{63}{subsubsection.6.1.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.1.2}Cold-Start Profiling Module}{64}{subsubsection.6.1.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.1.3}Content Adaptation Module}{64}{subsubsection.6.1.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.1.4}Feedback and Reward Module}{64}{subsubsection.6.1.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.1.5}Drift Detection Module}{64}{subsubsection.6.1.1.5}%
+\contentsline {section}{\numberline {6.2}Design Considerations}{64}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Assumptions and Dependencies}{64}{subsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.1.1}Assumptions}{65}{subsubsection.6.2.1.1}%
+\contentsline {subsubsection}{\numberline {6.2.1.2}Dependencies}{65}{subsubsection.6.2.1.2}%
+\contentsline {subsection}{\numberline {6.2.2}General Constraints}{66}{subsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.2.1}Hardware Constraints}{66}{subsubsection.6.2.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2.2}Data Availability}{66}{subsubsection.6.2.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.2.3}Source Availability}{66}{subsubsection.6.2.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.2.4}Performance Requirements}{66}{subsubsection.6.2.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.2.5}Security and Privacy}{66}{subsubsection.6.2.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.2.6}Language and Script}{66}{subsubsection.6.2.2.6}%
+\contentsline {subsection}{\numberline {6.2.3}Goals and Guidelines}{67}{subsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.3.1}Simplicity}{67}{subsubsection.6.2.3.1}%
+\contentsline {subsubsection}{\numberline {6.2.3.2}Grounded and Reliable Answers}{67}{subsubsection.6.2.3.2}%
+\contentsline {subsubsection}{\numberline {6.2.3.3}Safe Personalization}{67}{subsubsection.6.2.3.3}%
+\contentsline {subsubsection}{\numberline {6.2.3.4}Modularity}{67}{subsubsection.6.2.3.4}%
+\contentsline {subsubsection}{\numberline {6.2.3.5}User-Centric Design}{67}{subsubsection.6.2.3.5}%
+\contentsline {subsection}{\numberline {6.2.4}Development Methods}{67}{subsection.6.2.4}%
+\contentsline {section}{\numberline {6.3}System Architecture}{68}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Data Scraping and Knowledge Base}{69}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Cold-Start Profiling}{70}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Content Adaptation}{71}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Feedback and Drift Detection}{71}{subsection.6.3.4}%
+\contentsline {section}{\numberline {6.4}Architectural Strategies}{72}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Tools and Software}{72}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Client-Server Model}{72}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}Database}{73}{subsection.6.4.3}%
+\contentsline {subsection}{\numberline {6.4.4}Adapter-Based Personalization}{73}{subsection.6.4.4}%
+\contentsline {subsection}{\numberline {6.4.5}Retrieval-Augmented Generation}{73}{subsection.6.4.5}%
+\contentsline {subsection}{\numberline {6.4.6}Interface Paradigms}{73}{subsection.6.4.6}%
+\contentsline {subsection}{\numberline {6.4.7}Future Plans for Extension}{73}{subsection.6.4.7}%
+\contentsline {section}{\numberline {6.5}Domain Model/Class Diagram}{74}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Sequence Diagrams}{74}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Policies and Tactics}{80}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Coding Guidelines and Code Organization}{80}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Choice of Database}{80}{subsection.6.7.2}%
+\contentsline {subsection}{\numberline {6.7.3}Choice of Algorithms}{80}{subsection.6.7.3}%
+\contentsline {subsection}{\numberline {6.7.4}Safe Exploration and Reassignment}{81}{subsection.6.7.4}%
+\contentsline {subsection}{\numberline {6.7.5}Grounding and Source Policy}{81}{subsection.6.7.5}%
+\contentsline {subsection}{\numberline {6.7.6}Data Handling and Privacy}{81}{subsection.6.7.6}%
+\contentsline {subsection}{\numberline {6.7.7}User Interface}{81}{subsection.6.7.7}%
+\contentsline {subsection}{\numberline {6.7.8}Testing}{81}{subsection.6.7.8}%
+\contentsline {subsection}{\numberline {6.7.9}Engineering Trade-offs}{82}{subsection.6.7.9}%
+\contentsline {section}{\numberline {6.8}Conclusion}{82}{section.6.8}%
+\contentsline {chapter}{\numberline {7}Implementation and Test Cases}{83}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Implementation}{83}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Implementation of First Component/Algorithm}{83}{subsection.7.1.1}%
+\contentsline {section}{\numberline {7.2}Test case Design and description}{83}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Test Metrics}{83}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Sample Test case Metric.No.2}{83}{subsection.7.3.1}%
+\contentsline {chapter}{\numberline {8}User Manual}{85}{chapter.8}%
+\contentsline {chapter}{\numberline {9}Experimental Results and Discussion}{86}{chapter.9}%

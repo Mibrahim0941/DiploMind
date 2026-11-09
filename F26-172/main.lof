@@ -1,0 +1,32 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces SDG 4}}{7}{figure.caption.1}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Sign-Up Screen}}{44}{figure.caption.2}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Sign-In Screen}}{44}{figure.caption.3}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces On-Boarding Quiz Screen No.~1}}{45}{figure.caption.4}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces On-Boarding Quiz Screen No.~2}}{45}{figure.caption.5}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Chatbot Screen}}{46}{figure.caption.6}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Post-Explanation Quiz Popup}}{46}{figure.caption.7}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Overview of the four stages of the proposed approach}}{51}{figure.caption.15}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces The 3$\times $3 grid of aligned versions of one source passage, and how the six training sets are drawn from it.}}{54}{figure.caption.18}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Processing of one request in DiploMind: retrieval, knowledge correction and grounded generation.}}{57}{figure.caption.19}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces The fast loop: the bandit chooses an adapter pair, the learner's quiz result becomes a reward, and the reward updates the bandit.}}{59}{figure.caption.20}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Flow of the drift monitor that detects and corrects misplaced users.}}{61}{figure.caption.21}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces High-level Architecture Diagram}}{69}{figure.caption.22}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Data Scraping - Subsystem Architecture Diagram}}{70}{figure.caption.23}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Cold-Start Profiling - Subsystem Architecture Diagram}}{70}{figure.caption.24}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Content Adaptation - Subsystem Architecture Diagram}}{71}{figure.caption.25}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Feedback and Drift Detection - Subsystem Architecture Diagram}}{72}{figure.caption.26}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Class diagram}}{74}{figure.caption.27}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Sequence of User Registration}}{75}{figure.caption.28}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Sequence of User Login}}{76}{figure.caption.29}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Sequence of Onboarding Quiz}}{77}{figure.caption.30}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Sequence of Asking a Question}}{78}{figure.caption.31}%
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Sequence of Document Upload}}{79}{figure.caption.32}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
