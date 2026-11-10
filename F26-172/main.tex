@@ -2034,10 +2034,24 @@ Similar to the above table, add here for test metrics 2,3,4.\\
 \textcolor{red}{NOTE: This Chapter is optional for Research projects but compulsory for Development projects.}\\ 
 \end{comment}
 
+\providecommand{\ph}[1]{\textbf{[#1]}}
+\providecommand{\phfig}[2]{\fbox{\parbox[c][#1][c]{0.88\textwidth}{\centering\textit{#2}}}}
 \chapter{Experimental Results and Discussion}
-This chapter will be added in FYP-II. Give proper analysis and discussion of experimental results (in plain English text) along with tables of results.  For each chapter provide a paragraph of introduction and in the end a paragraph of conclusions.\\
-\textcolor{red}{NOTE: This Chapter is optional for Development projects but compulsory for Research projects.}
+This chapter reports the experimentation involving the base Model selection along with the training and evaluation of the six LoRA adapters of Diplomind i.e. three language adapters (Urdu, Urdish, English) and three depth adapters (easy, medium, technical). The base model selection involved running 4 candidate models on the same samples and then reviewing the quality of them using automated language following checks as well as human reviews. Each adapter was trained on its own training set and evaluated against the base model on a fixed test set. The cahapter describes the experimental setup and the evaluation metrics, presents the model selection findings, training behaviour and test results of each adapter and discusses what the results show and where they are limited.
 
+\section{Experimentation Overview}
+The experiments had two parts. The first compared four candidate models without any fine-tuning, in order to choose the base model on which all adapters would be trained (Section~\ref{sec:base-selection}). The second tested whether a small LoRA adapter can reliably teach that frozen base model one controllable property of its output, either the language (and script) of an explanation or its depth. Five questions guided the experiments.
+ 
+\begin{itemize}
+    \item Which of the four candidate models already handles Urdu and Urdish best, without any fine-tuning?
+    \item Does each adapter lower the loss of the base model on unseen articles?
+    \item Does the adapted model follow the requested language or depth more consistently than the base model?
+    \item Does the adapter keep the output faithful to the source article (names, numbers and facts unchanged)?
+    \item How do the six adapters compare with each other in training behaviour and final quality?
+\end{itemize}
+ 
+The base-model comparison selected Llama 3.1 8B Instruct, and all six adapters were trained on it. Every adapter was trained with the same recipe so that differences between adapters come from their training data and not from their settings. All adapter results are measured on the same held-out test articles. The base-model comparison was run before any training and used its own small set of test inputs, which is described in Section~\ref{sec:base-selection}.
+ 
 \begin{comment}
 \chapter{Conclusions}
 \section{aa}
