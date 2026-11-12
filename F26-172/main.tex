@@ -552,25 +552,25 @@ Simulates only multiple-choice correctness from past logs; two datasets, one not
 \end{longtable}
 
 \section{Conclusion}
-This chapter reviewed sixteen studies relevant to an adaptive multilingual learning platform for International Relations. The studies cover the composition of separately trained LoRA adapters, the personalization of language models to different users, the use of contextual bandits to choose between options, and the grounding of answers in retrieved evidence. They also cover the building of Roman Urdu and code-switched data, the profiling of new users, and tutoring and learner-simulation systems. Each of these techniques has been studied on its own, but most of the work is limited to English, relies on simulated users or fixed preferences, or uses rewards that do not measure whether a learner understood. None of the reviewed studies combines language and depth personalization for multilingual IR learners with correction of the learner's profile from comprehension results. This gap motivates DiploMind, whose approach is described in the following chapters.
+This chapter reviewed sixteen studies relevant to an adaptive multilingual learning platform for International Relations. The studies cover the composition of separately trained LoRA adapters, the personalization of language models to different users, the use of contextual bandits to choose between options, and the grounding of answers in retrieved evidence. They also cover the building of Roman Urdu and code-switched data, the profiling of new users, and tutoring and learner-simulation systems. Each of these techniques has been studied on its own, but most of the work is limited to English, relies on simulated users or fixed preferences, or uses rewards that do not measure whether a learner understood. None of the reviewed studies combines language and depth personalization for multilingual IR learners with correction of the learner's profile from comprehension results.
 
 \clearpage
  
 \chapter{Software Requirement Specifications}
-This chapter defines what DiploMind must do and how well it must do it. It lists the features of the system, its functional and non-functional requirements, the assumptions made, and the main use cases.
+In this chapter, we describe the software requirements for DiploMind, covering both what the system should do and how well it should perform.
 
 \section{List of Features}
 Major features of our system are as follows.
 
 \begin{itemize}
-    \item Create accounts and profile learners through profiling questions and a short onboarding quiz.
+    \item Let users sign up, create their accounts. Take a short onboarding quiz to build their profile.
     \item Automatically place each learner into one of nine groups (three language registers $\times$ three depth levels).
-    \item Answer International Relations (IR) questions in English, Urdu or Urdish at easy, medium or technical depth.
-    \item Ground answers in retrieved documents and provide source references.
-    \item Conduct quizzes after explanations to measure learner understanding.
-    \item Adaptively select the language and depth adapters for each group using a LinUCB contextual bandit.
-    \item Detect drift and move learners who were placed in the wrong group.
-    \item Periodically update the shared adapters with quiz-based rewards (system side).
+    \item Answer IR questions in English, Urdu or Urdish at easy, medium or technical depth.
+    \item Give answers based on retrieved documents and provide reference to its source.
+    \item After some explanations take short intermediate quizzes to check user understanding.
+    \item Use a LinUCB contextual bandit for adaptive selection of language and depth adapters for each group.
+    \item Detect when a learner’s performance drifts and move them if they were placed in the wrong group.
+    \item Update the shared adapters from time to time using quiz based rewards.
 \end{itemize}
 \section{Functional Requirements}
 This section highlights the functional requirements of our system which relate to its technical functionalities. These requirements include:
@@ -592,11 +592,11 @@ This section highlights the functional requirements of our system which relate t
 \end{itemize}
 
 \section{Quality Attributes}
-Quality attributes are integral to the performance evaluation of a software system. They provide a checklist that aids in assessing the quality of the software. The quality attributes of our system are:
+Quality attributes are integral to the performance evaluation of a software system. They provide a checklist that aids in assessing the quality of the software. Following are the quality attributes of Diplomind:
 
 \begin{itemize}
-    \item The system should provide answers that stay consistent with the retrieved sources.
-    \item The system should improve its choice of language and depth for each group as rewards arrive.
+    \item The system should provide answers similar to retrieved sources.
+    \item The system should change the language and depth for each group according to the rewards.
     \item The system should be easy to use for learners without an IR or technical background.
     \item The system should be easy to modify and upgrade, with the base model, adapters, retrieval and data layers replaceable without changing the other parts.
     \item The system should protect learner profiles, chats and quiz results.
@@ -614,17 +614,17 @@ This section describes all the non-functional requirements of our system, focusi
     \item The system shall be efficient enough to detect a misplaced learner within a few quiz rounds and move them to a better-suited group in time, minimizing the number of unsuitable explanations they receive.
     \item The system shall display Urdu right-to-left, Urdish in Roman script and English left-to-right, so that each learner reads text in its natural form.
     \item Access controls shall restrict each learner to their own data, and uploaded documents shall be deleted after the session, ensuring privacy.
-    \item The system shall allow the base model, adapters, retriever or knowledge base to be replaced or extended without changes to other modules.
+    \item The system should support modularity so that the adapters or other components such as base model, retriever or knowledge base can be swapped without affecting others.
 \end{itemize}
  
 
 \section{Assumptions}
-The following assumptions will be made when developing our system.
+Following assumptions are to be made during development:
 
 \begin{itemize}
-    \item Learners have a modern web browser and an internet connection.
-    \item Learners can read at least one of the three language registers: English, Urdu or Urdish.
-    \item Information given during account creation may be inaccurate, which is why drift detection is part of the system.
+    \item Users should have access to internet and latest web browser.
+    \item Users can read at least one of the three language styles: English, Urdu, Urdish
+    \item Details entered during signup may be inaccurate, so drift detection is added to catch the incorrect placement of user in groups.
     \item The university GPU server is available for hosting the model.
     \item The knowledge base is built from the validated public sources (Dawn, BBC World and ISSI).
 \end{itemize}
@@ -1284,7 +1284,7 @@ This section presents the graphical user interface of each screen of the applica
 
 \clearpage
 \section{Database Design}
-DiploMind stores its data in MongoDB, a NoSQL document database. Instead of tables with fixed columns and enforced relationships, the data is kept as collections of flexible, JSON-like documents.  An Entity Relationship Diagram (ERD) is designed for relational databases, where tables are linked through enforced foreign keys, so it does not fit our design. Instead, the data dictionary below describes each collection, its fields, their data types and the collection that each reference field points to. Fields marked (FK) hold the ID of a document in another collection, and the application, not the database, keeps these links consistent.
+DiploMind stores its data in MongoDB, a NoSQL document database. Instead of tables with fixed columns and enforced relationships, the data is kept as collections of flexible, JSON-like documents.  An Entity Relationship Diagram (ERD) is designed for relational databases, where tables are linked through enforced foreign keys, so it does not fit our design. Instead we use a data dictionary , shown below. For each collection, it lists the fields, their data types and for reference fields, which collection they point to. A field marked (FK) stores the ID of a document from another collection. MongoDB does not enforce these links, so our application is responsible for keeping them consistent.
 \subsection{Data Dictionary}
 
 % Needs no extra packages. Column widths assume a standard text width.
@@ -1421,14 +1421,15 @@ Intermediate Quiz Response & ResponseID& ObjectId & & No & Unique ID of the resp
 
 \FloatBarrier
 \section{ Risk Analysis}
-In this part we highlight some of the risks that are associated with the development, maintenance and scalability of the project.
+This section highlights the main risks that may affect the development, maintenance and scalability of our system
 \subsection{Technical Risks}
-DiploMind is built on fast-moving technology such as large language models, LoRA adapters and vector databases, so the tools and models it relies on are likely to change. The base model may need to be replaced by a newer one, which would require the adapters to be trained again, and the libraries and APIs we use may become obsolete and have to be replaced. The scraping pipeline depends on external news websites, so a change in a website's layout can break it. The adapters are trained on LLM-generated and translated Urdu and Urdish text, so mistakes in this data can reach the final answers if it is not reviewed. Updating the model from quiz feedback using the GRPO approach is hard to implement, as it needs a well-designed reward, a lot of compute, and enough user data, so it may have to be replaced by a simpler method. The requirements of the application may also change in the future, thus asking for a product revamp.
+DiploMind relies on fast moving technologies like large language models, LoRA adapters and vector databases. The tools and models we use today may change in future. The base model may need to be replaced by a newer one, which would require the adapters to be trained again, and the libraries and APIs we use may become obsolete and have to be replaced. The scraping pipeline depends on external news websites, so a change in a website's layout can break it. The adapters are trained on LLM-generated and translated Urdu and Urdish text, so mistakes in this data can reach the final answers if it is not reviewed. Updating the model from quiz feedback using the GRPO approach is hard to implement, as it needs a well-designed reward, a lot of compute, and enough user data, so it may have to be replaced by a simpler method. 
+
 \subsection{Business Risks}
-Hosting the application, especially running the language model on a GPU server or in the cloud, can be expensive, so the application might need financing. Developers and subject experts may also be needed to maintain the application, keep the knowledge base up to date, and review Urdu and Urdish content. Since the knowledge base comes from news and research websites, their terms of use and copyright rules may limit how the content can be used. The system also stores user profiles and quiz results, so user privacy must be protected, and a data leak would damage trust in the application.
+If the language model is to be hosted on a GPU server or in cloud, then running the application can be expensive and funding may be required. Developers and subject experts will also be required to maintain the application. As, the knowledge base is built from news and research websites, their terms of copyright may limit to how we use the content. Also, user profiles are to be stored too, so protecting user privacy is essential because a data leak can damage people's trust.
 
 \section{Conclusion}
-This chapter defined what DiploMind must do and how well it must do it. It listed the main features of the system and set out its functional, quality, and non-functional requirements, together with the assumptions made. Eight use cases described how a learner registers, completes the onboarding quiz, asks questions, takes comprehension quizzes, changes the explanation language, uploads a document, and requests a web search. The graphical interface screens showed how the main flows will look. The data dictionary defined the data the system stores, and the risk analysis identified the technical and business risks that could affect the project. Together, these requirements form the basis for the methodology and design chapters that follow.
+This chapter focused on what Diplomind is required to do. It covers functional, quality and non-functional requirements alongwith assumptions. This chapter also describes the use cases about what the learner can do through the application. The GUI screens show the flow of the application. The data dictionary defines the data stored in the system and the technical and business risks are also discussed, that may affect the system. Together all these requirements are the base for the methodology and design of the system.
 
 
 \chapter{Proposed Approach and Methodology}
