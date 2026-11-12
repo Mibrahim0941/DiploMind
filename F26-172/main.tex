@@ -308,10 +308,10 @@ One of the strengths of this research lies in its linear scaling, since each new
 
 
 \subsubsection{Relationship to the proposed research work}
-This research is relevant to the adapter design and composition module of our project, which trains three language adapters and three depth adapters separately and combines them to cover nine user clusters. Its expertise dimension corresponds to our depth axis, and its results support merging separately trained adapters over prompt-based personalization. While they rely on fixed, user-declared preferences and assume independent English style dimensions, our system places learners through onboarding, corrects the adapter pair with LinUCB using quiz-based feedback, and uses drift detection to move misplaced learners. We will also compare merged and jointly trained adapters, since language and depth may not combine independently. 
+This research is relevant to the adapter design and composition module of our project, which trains three language adapters and three depth adapters separately and combines them to cover nine user clusters. Its expertise dimension corresponds to our depth axis, and its results support merging separately trained adapters over prompt-based personalization. The main difference between this research paper and adapter design and composition module of our project is that they rely on fixed user preferences with English style whereas Diplomind starts with placing the users through onboarding quiz, and then using the quiz based feedback updates the adapter pair with LinUCB. It also uses drift detection to change the clusters of misplaced learners.
 
 
-\subsection{A Contextual-Bandit Approach to Personalized News Article Recommendation}
+\subsection{A Contextual Bandit Approach to Personalized News Article Recommendation}
 LinUCB, a contextual bandit algorithm that selects articles from user and article features and learns from click feedback, together with an offline method for evaluating such algorithms on logged data.
 
 \subsubsection{Summary of the research item}
