@@ -1,4 +1,5 @@
 \documentclass{FastFyp}
+
 \begin{document}
 \newcommand{\supervisor}{Dr. Hajra Waheed}
 \newcommand{\university}{National University of Computer and Emerging Sciences, Lahore}
@@ -1956,7 +1957,7 @@ A few trade offs shaped how we build this. A 7-8B model in 4 bit fits on a 16 GB
 \section{Conclusion}
 This chapter covered the design of Diplomind. It started with an introduction of what Diplomind is and what it does, then explained its assumptions, dependencies, constraints, and guidelines. It explains the architecture which is divided into offline preparation part and online part where users use the system. The reason for using one shared model and six adapters was also explained alongwith retrieval augmented generation, client server setup, and a NoSQL database with vector database. What a user can do is shown through the sequence diagrams, and the policies and tactics list our choices on algorithms, safe exploration, grounding, privacy and testing.
 
-
+\begin{comment}
 \chapter{Implementation and Test Cases}
 For each chapter, provide a paragraph of introduction and at the end, a paragraph of conclusions. (Not the programming code but the algorithmic and procedural details especially related to the hidden/ backend algorithms that are not covered in the design)
 \section{Implementation}
@@ -1965,6 +1966,7 @@ Give clear details of the algorithms that were implemented along with the platfo
 \textcolor{red}{NOTE: For FYP-1, this chapter can be changed to description of prototype developed.}
 \subsection{Implementation of First Component/Algorithm}
 Write the implementation of the first component of your system here.
+\end{comment}
 
 \begin{comment}
 \section{Test case Design and description}
@@ -2038,24 +2040,173 @@ Similar to the above table, add here for test metrics 2,3,4.\\
 \textcolor{red}{NOTE: This Chapter is optional for Research projects but compulsory for Development projects.}\\ 
 \end{comment}
 
+
 \providecommand{\ph}[1]{\textbf{[#1]}}
 \providecommand{\phfig}[2]{\fbox{\parbox[c][#1][c]{0.88\textwidth}{\centering\textit{#2}}}}
 \chapter{Experimental Results and Discussion}
-This chapter reports the experimentation involving the base Model selection along with the training and evaluation of the six LoRA adapters of Diplomind i.e. three language adapters (Urdu, Urdish, English) and three depth adapters (easy, medium, technical). The base model selection involved running 4 candidate models on the same samples and then reviewing the quality of them using automated language following checks as well as human reviews. Each adapter was trained on its own training set and evaluated against the base model on a fixed test set. The cahapter describes the experimental setup and the evaluation metrics, presents the model selection findings, training behaviour and test results of each adapter and discusses what the results show and where they are limited.
+This chapter reports the experimentation involving the base Model selection along with the training and evaluation of the six LoRA adapters of Diplomind i.e. three language adapters (Urdu, Urdish, English) and three depth adapters (easy, medium, technical). The base model selection involved running 4 candidate models on the same samples and then reviewing the quality of them using automated language following checks as well as human reviews. Each adapter was trained on its own training set and evaluated against the base model on a fixed test set. The chapter describes the experimental setup and the evaluation metrics, presents the model selection findings, training behaviour and test results of each adapter and discusses what the results show and where they are limited.
 
 \section{Experimentation Overview}
-The experiments had two parts. The first compared four candidate models without any fine-tuning, in order to choose the base model on which all adapters would be trained (Section~\ref{sec:base-selection}). The second tested whether a small LoRA adapter can reliably teach that frozen base model one controllable property of its output, either the language (and script) of an explanation or its depth. Five questions guided the experiments.
+The experiment covered three parts. The first one compared four candidate models without any finetuning, to help choose the base for which all adapters would be trained (Section~\ref{sec:base-selection}). The second part covered whether a small LoRA adapter can teach a model to follow tone or language instuctions, and whether composing two adapters trained for different task gave the behavior of both. The third and final part compared the composition approach with the jointly trained approach to verify that composing adapters give almost similar performance as jointly training them. The following questions form the basis of our experimentation:
  
 \begin{itemize}
-    \item Which of the four candidate models already handles Urdu and Urdish best, without any fine-tuning?
+    \item Which of the four candidate models already handles Urdu and Urdish best, without any finetuning?
     \item Does each adapter lower the loss of the base model on unseen articles?
     \item Does the adapted model follow the requested language or depth more consistently than the base model?
     \item Does the adapter keep the output faithful to the source article (names, numbers and facts unchanged)?
-    \item How do the six adapters compare with each other in training behaviour and final quality?
+    \item Does composing two (or more) adapters using simple mathematical operations gives us a middleground of both?
+    \item Does the composing work in a way that the performance is almost identical with joint adapters but cost is cut due to less adapters being trained?
 \end{itemize}
  
-The base-model comparison selected Llama 3.1 8B Instruct, and all six adapters were trained on it. Every adapter was trained with the same recipe so that differences between adapters come from their training data and not from their settings. All adapter results are measured on the same held-out test articles. The base-model comparison was run before any training and used its own small set of test inputs, which is described in Section~\ref{sec:base-selection}.
- 
+The base model comparison selected Llama 3.1 8B Instruct, and all six adapters were trained on it. Every adapter was trained with the same configuration so that differences between adapters come from their training data and not from their settings. All adapter results are measured on the same test articles. The base model comparison was run before any training and used its own small set of test inputs, which is described in Section~\ref{sec:base-selection}.
+
+\section{Base Model Selection}
+\label{sec:base-selection}
+Before training the adapters, a major task was to choose a base model, the base model  selection relied on which model generated our required language (and depth) more clearly even without seeing any sample or finetuning. We compared for open sourced LLMs, all ranging in the size of 7 Billion to 12 Billion parameters. These models were: Llama 3.1 8B Instruct, Qwen3 8B, Mistral 7B Instruct v0.3 and Gemma 3 12B. At the time of this experimentation, the dataset wasn't ready so we used a small, fixed set of news inputs to test on.
+
+\subsection{Setup}
+Each model received the same 33 prompts, split across two tasks. All prompts were zero-shot, which means that the prompts only described the tasks and didn't include any example answers at all.
+
+\subsubsection{Generation Task}
+The first task revolved around generating the type of explanations DiploMind is expected to generate, i.e. explaining a news item in the language and depth the users want. We took three english news paragraphs on Pakistani and IR content and asked each model to explain every summary in all nine combinations of language and depth, giving 27 prompts per model. The exact wording of of each prompt is given in Table~\ref{tab:prompts-gen}.
+
+\subsubsection{Urdu Comprehension Task}
+The second task judged the LLMs understanding of urdu source text, which we needed as many of our article sources are in Urdu as well. Each model was given six Urdu news articles and was asked to summarise each one in English in three to five sentences, keeping names and numbers exactly as in the article. The exact wording of of the prompt is given in Table~\ref{tab:prompts-comp}.
+
+\subsubsection{Prompts}
+Every prompt had a system message and a user message. For the generation task, the system message combined a fixed role with one language instruction and one depth instruction, and the user message contained the news summary. For the understanding task, the system message included the role of the model and the user message asked for the summary of the news source attached. Table~\ref{tab:prompts-gen} and Table~\ref{tab:prompts-comp} lists prompts for both of these tasks.
+
+\begin{table}[!ht]
+\centering
+\caption{Prompt templates for the generation task. The system message is the role sentence followed by one language instruction and one depth instruction}
+\label{tab:prompts-gen}
+\small
+\begin{tabular}{|p{0.22\textwidth}|p{0.70\textwidth}|}
+\hline
+\textbf{Part} & \textbf{Text} \\ \hline
+System (role) & You explain international-relations news to readers in Pakistan. \\ \hline
+Language: English & Write your answer in English. \\ \hline
+Language: Urdish & Write your answer in Urdish: Urdu written in English (Roman) letters, mixed with English words, the way Pakistanis write in text messages (for example: ``Hukumat ne naya faisla kiya hai''). Do not use Urdu script. \\ \hline
+Language: Urdu & Write your answer in Urdu, using Urdu script. \\ \hline
+Depth: easy & Explain it for a complete beginner: short, simple sentences, and explain any technical term in plain words. \\ \hline
+Depth: medium & Explain it for an interested general reader, like a university student from another field. \\ \hline
+Depth: hard & Explain it like an analyst writing for specialists: precise technical vocabulary, no explanations of terms. \\ \hline
+User & Explain this news: \textit{[news summary]} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{Prompt template for the Urdu comprehension task}
+\label{tab:prompts-comp}
+\small
+\begin{tabular}{|p{0.22\textwidth}|p{0.70\textwidth}|}
+\hline
+\textbf{Part} & \textbf{Text} \\ \hline
+System & You are a careful reader of Urdu news. \\ \hline
+User & Read this Urdu news article and summarise its main facts in 3 to 5 English sentences. Keep names and numbers exact. \textit{[Urdu article]} \\ \hline
+\end{tabular}
+\end{table}
+
+For example, the system message for an easy Urdish explanation was the role sentence, followed by the Urdish instruction, followed by the easy depth instruction.
+
+\subsubsection{Settings and Metrics}
+For the setup and generation, the models were loaded one at a time in 4-bit quantization on a single Kaggle T4 GPU. Answers were generated greedily, iterating over the prompts one by one, with a generation limit of 400 tokens to prevent unnecessary long outputs. The outputs were scored with the following metrics:
+
+ \textbf{Language adherence:} Whether the output is in the requested language and script. It was checked with simple language based rules that checked on the basis of urdu script characters and roman urdu words.\\
+ \textbf{Hindi leakage:} Whether the output contains Devanagari characters.\\
+ \textbf{Number recall:} The share of numbers in the source that also appear in the output, as a simple check on facts.\\
+ \textbf{Urdu tokenizer fertility:} How many tokens were needed to represent a word. The lower the better since longer token sequences make training and inference more costly.\\
+ \textbf{Generation speed:} Tokens generated per second on the T4 GPU.\\
+
+\subsection{Results}
+After running all 33 prompts on each model, we scored the outputs using the metrics described above. Table~\ref{tab:base-results} summarises the results.
+
+\begin{table}[!ht]
+\centering
+\caption{Zero-shot comparison of the candidate models}
+\label{tab:base-results}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\hline
+\textbf{Model} & \textbf{English} & \textbf{Urdish} & \textbf{Urdu} & \textbf{Hindi} & \textbf{Num. rec.} & \textbf{Urdu fert.} & \textbf{Tok/s} \\ \hline
+Llama 3.1 8B & 9/9 & \textbf{9/9} & 8/9 & 0/33 & 83\% & 2.95 & 10.9 \\ \hline
+Qwen3 8B     & 9/9 & 5/9 & 9/9 & 0/33 & 80\% & 3.06 & 9.2 \\ \hline
+Mistral 7B   & 9/9 & 6/9 & 5/9 & 7/33 & 97\% & 4.65 & 12.8 \\ \hline
+Gemma 3 12B  & 9/9 & 5/9 & 9/9 & 0/33 & 59\% & \textbf{1.39} & 8.7 \\ \hline
+\end{tabular}
+\end{table}
+
+All four models followed the English instruction. Urdish is what created a distinction for us to judge the quality most clearly. Llama was the only model to get it right every time, while Qwen and Gemma often replied in English instead of Roman Urdu. Mistral had the weakest Urdu, sometimes wrote Urdish in Urdu script and was the only model to leak Hindi in its outputs. It still had a high number recall along with this weak urdu, showing that high number recall doesn't mean better answer quality. Gemma had the most efficient Urdu tokenizer, using about half as many tokens as Llama to represent the same text. In English, all four models wrote at a higher reading grade as the requested depth increased, so all of them followed the depth instruction.
+
+\subsection{Output Comparison}
+The scores in Table~\ref{tab:base-results} Can be misleading as we've seen in an example above that high recall due to rule based checks doesn't necessarily mean that the quality is good and consistent with the language. So we reviewed the outputs ourselves and also took help of our peers to judge which one is actually consistent. In this section we first compare the four models on the same news item in Urdish and in Urdu, and then show the main kinds of errors we found in Qwen, Mistral and Gemma. All examples in Table~\ref{tab:output-urdish} and Table~\ref{tab:output-urdu} are answers to the following news summary at the easy depth:
+
+\begin{quote}\small
+Protests against the emergency and governor's rule in Khyber Pakhtunkhwa continued for a second day in the Bara area of Khyber district, with markets closed and a heavy police and FC presence. According to Peshawar police, 21 people, including police personnel, were injured in clashes between police and PTI workers on 13 October, and 62 people were taken into custody.
+\end{quote}
+
+
+\subsubsection{Urdish}
+Table~\ref{tab:output-urdish} shows the answers of the four models for the Urdish prompt. Llama's answer is short, natural and keeps all three numbers (13 October, 21 injured, 62 arrested). Qwen understood the news but ignored the language instruction and wrote in English. Mistral passed the automatic check, but its Urdish is hard to read and uses hallucinated phrases such as ``shamshir-e-qayamat'' for the emergency, which shows that the rule based check cannot judge quality. Gemma's Urdish was natural, but it opened with an English sentence addressed to the user, used different formatting, and its full answer (250 words) was much longer than what a beginner level explanation needs.
+
+\begin{table}[H]
+\centering
+\caption{Outputs of the four models for the same prompt (Urdish, easy). Long answers are shortened, marked with [\dots]}
+\label{tab:output-urdish}
+\small
+\begin{tabular}{|p{0.14\textwidth}|p{0.58\textwidth}|p{0.14\textwidth}|}
+\hline
+\textbf{Model} & \textbf{Output} & \textbf{Check} \\ \hline
+Llama 3.1 8B & Hukumat ne Bara area mein emergency ke khilaf protest ko rokne ke liye police aur FC ko bheja hai. 13 October ko police aur PTI workers ke beech ladai hui, jismein 21 log, jismein police ke log bhi shamil the, injured hue. 62 logon ko giraftaar kiya gaya hai. & Passed \\ \hline
+Qwen3 8B & People are protesting in Khyber area again. They are against the emergency and the governor's rule. Markets are closed. Police and FC are there in big numbers. On 13th October, there was a fight between police and PTI workers. [\dots] & Failed (plain English) \\ \hline
+Mistral 7B & Aaj kal, Bara khuwahish ke khudutay hukumat mein shamshir-e-qayamat aur wali-e-wazarat (governor's rule) ke tarkib par dharna-e-azadi (protests) do din baad rahay hain Khyber Pakhtunkhwa mein [\dots] & Passed \\ \hline
+Gemma 3 12B & Okay, here's an explanation of the news, written in a style a Pakistani might use in a text message [\dots] ``Acha, suno. KP mein, Khyber district ke Bara area mein protests chal rahe hain. Governor's Rule lagaya gaya hai, isliye log protest kar rahe hain.'' [\dots] & Passed \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Urdu}
+Table~\ref{tab:output-urdu} shows the answers of the four models for the same news in Urdu. All four answers passed the automatic Urdu check, but reading them shows what went wrong with which model. Llama's answer keeps all the facts and numbers and is easy to follow, although a few word choices are weird, such as \textit{dhansne wali soorat-e-haal}. Qwen's answer has the right structure but it replaced the place name with an unrelated word (\textit{kichri}), used the meaningless phrase \textit{swamiyon ke market}, and turned governor's rule into ``the governor's order''. Mistral's answer is the hardest to read, it says the 21 people became ill instead of injured, and the sentences are not grammatically correct. Gemma wrote the most fluent Urdu, but it started by talking to the user, formatted the answer with markdown headings and bullet points (removed in the table), used the unusual term \textit{aaftein haalat} for emergency, and added a claim that is not in the source that the Chief Minister got suspended.
+
+\begin{table}[H]
+\centering
+\caption{Outputs of the four models for the same prompt (Urdu, easy). Long answers are shortened, marked with [\dots]}
+\label{tab:output-urdu}
+\includegraphics[width=\textwidth]{Figures/table_urdu_outputs.png}
+\end{table}
+
+
+\subsubsection{Errors in the Other Models}
+Apart from the examples above, we found some problems in Qwen, Mistral and Gemma. Table~\ref{tab:output-errors} shows one example of each, taken from other prompts in the comparison.
+
+These examples show that the weaker results in Table~\ref{tab:base-results} come from different kinds of problems. Qwen tended to fall back to English and, in one case, got stuck in a repetition loop. Mistral's problems were with the Urdu language,with it using wrong words, wrong script and Hindi letters. Gemma understood the task and wrote fluently, but it did not stick to the format and added extra information. Llama also made some mistakes, but its answers stayed in the requested language and kept closer to the source than the others.
+
+\begin{table}[H]
+\centering
+\caption{Examples of errors made by Qwen, Mistral and Gemma}
+\label{tab:output-errors}
+\small
+\begin{tabular}{|p{0.12\textwidth}|p{0.12\textwidth}|p{0.40\textwidth}|p{0.22\textwidth}|}
+\hline
+\textbf{Model} & \textbf{Prompt} & \textbf{Output (shortened)} & \textbf{Problem} \\ \hline
+Qwen3 8B & Urdish, hard & [\dots] 13 October ko police aur PTI workers ke beech clash mein 21 log, jo ki police ke log bhi shamil hain, zara zara zara zara zara zara zara zara zara zara [\dots] & Got stuck repeating one word until the output limit \\ \hline
+Qwen3 8B & Urdish, hard & Russia's Foreign Minister Sergei Lavrov mentioned during a speech to students in Moscow on 7 September that Iran could potentially join the Makkah Defence Agreement [\dots] & Plain English, and added its own analysis not in the source \\ \hline
+Mistral 7B & Urdish, hard & \raisebox{-0.9\height}{\includegraphics[width=\linewidth]{Figures/mistral_urdish_hard.png}} & Wrote Urdish in Urdu script (all three hard prompts) \\ \hline
+Mistral 7B & Urdu, easy & \raisebox{-0.9\height}{\includegraphics[width=\linewidth]{Figures/mistral_urdu_easy.png}} & Spelled the name Aurangzeb with Hindi (Devanagari) letters mixed into the Urdu spelling \\ \hline
+Gemma 3 12B & Urdish, hard & Okay, here's an explanation of the Lavrov statement [\dots] \textbf{Please read the disclaimer at the very end} [\dots] Okay guys, listen up. Lavrov's comment about Iran potentially joining the Makkah Initiative -- it's \textit{significant}, but needs unpacking. [\dots] & Mostly English, with a long preamble and a disclaimer \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Selected Model}
+We chose \textbf{Llama 3.1 8B Instruct} as our base model, primarily because Urdish was a risky target and Llama was the only model that handled it better than the others. It also performed close to best in Urdu and kept the source information without hallucinating any facts. Gemma wrote consistent Urdu and Urdish but the checks failed due to surrounding text in other script. It also would need more GPU power to finetune since it has more parameters than Llama. Llama's drawback is its tokenizer which would make training expensive but it is not that big of an issue since it would still fit the A4000 GPU we would be finetuning on.
+
+\subsection{Limitations}
+This comparison used only 33 prompts per model, so small differences (such as 8/9 against 9/9) should not be over read. The checks are rule based and do not measure fluency, and some long outputs were cut off at the 400 token limit. The before/after evaluation of the trained adapters in the following sections gives a more direct test of whether Llama was a good choice.
+
+
 \begin{comment}
 \chapter{Conclusions}
 \section{aa}
