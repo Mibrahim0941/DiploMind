@@ -1677,7 +1677,7 @@ and aligned language and depth variants of news content, and six LoRA adapters a
 bined by weighted addition. Initially, users are placed in one of the nine groups using a short onboarding quiz. Neighboring adapter pairs are tested using contextual bandit using quiz based rewards and drift monitor corrects the wrongly placed learners. The adapters are improved over time using an offline loop. The explanations presented to the users are based on retrieved evidence which can also include web search and document upload. Several choices are yet to be made like the base model selection, type of slow loop optimization and the tuning of quiz and reward. These will be decided based on experimental results.
 
 \chapter{High-Level and Low-Level Design}
-This chapter presents the high-level and low-level design of DiploMind. It starts with a short overview of the system and the design considerations that shaped it, such as our assumptions, constraints and goals. It then presents the system architecture, the architectural strategies we chose, the class diagram and the sequence diagrams, which together show how the system is organized and how its parts work together. Finally, it describes the policies and tactics followed during development.
+This chapter focuses at design level of DiploMind. It includes overview of the system and factors such as assumptions,constraints and goals. It also dicusses the system architecture and the design diagrams. At last, it also defines the policies and tactics which are to be followed.
 
 Together, these sections explain how the system works and how it can be maintained and extended in the future.
 \section{System Overview}
@@ -1687,16 +1687,17 @@ DiploMind is a web-based adaptive learning platform that explains international 
 DiploMind achieves personalized and continuously corrected explanations through five modules that work together. The design of each module is discussed in the following subsections.
  
 \subsubsection{Data Scraping Module}
-This module collects current-affairs and foundational IR content from news and think-tank sources such as Dawn, BBC World and ISSI. The collected articles are cleaned to remove menus, advertisements and other clutter, filtered so that only IR and current-affairs content remains, and tagged by language and content type. Each article is then split into passages, which are embedded with a multilingual embedding model and stored in a vector database, so that a question in one language can retrieve passages in another.
+This module collects current affairs and foundational IR content from news and think tank sources such
+as Dawn, BBC World and ISSI. In this module, we clean these articles by removing extra unwanted content such as menus, ads, etc. Only the articles focusing on IR and current affairs are kept which are tagged by language and content type. Next, the article is divided into small passages which are turned into embeddings through a multilingual embedding model and then stored in vector database. This allows the questions asked in one language to be answered in other languages.
  
 \subsubsection{Cold-Start Profiling Module}
-This module handles new learners who have no history yet. It presents a short onboarding quiz with questions on language comfort and IR background, where every question offers an ``I am not sure'' option. Based on the answers, the module places the learner into one of the nine language and depth groups, which decides how their first explanations are written.
+The users who have no history are handled by cold start profiling. The users have to give a short onboarding quiz when they join so that the system can know about their language preference and their IR background. Every question has an "I am not sure" option so nobody is forced to answer. These answers are used to put the users into one of the nine groups which is then used for the explanation generation.
  
 \subsubsection{Content Adaptation Module}
-This module produces the explanation for each question. It first retrieves the most relevant passages from the knowledge base, re-ranks them and checks whether they are relevant enough to be used. A LinUCB contextual bandit then selects a language adapter and a depth adapter for the learner, and the two LoRA adapters are combined on a shared base language model to generate an explanation that uses only the retrieved passages and cites them. The same module explains uploaded documents and web search results when the learner requests them.
+This module works on explanation generation. The system pulls the most relevant passages from the knowledge base, then checks that they actually answer the question. A LinUCB contextual bandit then selects a language adapter and a depth adapter for the learner, and the two LoRA adapters are combined on a shared base language model to generate an explanation that uses only the retrieved passages and cites them. The same module explains uploaded documents and web search results when the learner requests them.
  
 \subsubsection{Feedback and Reward Module}
-This module checks whether the explanations were actually understood. After every 5--10 questions, it generates a short multiple-choice quiz from the recent explanations and scores the learner's answers. The score is used as a reward for the adapter pair that produced the explanations, updating the bandit immediately, and it is stored so that the shared adapters can be improved periodically.
+This module checks whether the explanations were actually understood. After every 5--10 questions, it generates a short multiple-choice quiz from the recent explanations and scores the learner's answers. The quiz score is the reward for adapter pair that produces explanations to improve them overtime. The reward is also used for updating bandit immediately.
  
 \subsubsection{Drift Detection Module}
 This module checks whether a learner's group is still correct over time. It compares the learner's recent quiz rewards with the average rewards of their group, and flags learners who perform much worse than their group or who repeatedly change the assigned language. A flagged learner is moved to a neighbouring group if that group is expected to suit them better, with a cool-down period after each move so that the learner is not switched back and forth.
@@ -1722,7 +1723,7 @@ This section describes the assumptions and dependencies that shape the design an
 \subsubsection{Dependencies}
 \begin{itemize}
     \item The system depends on an open instruction-tuned base language model, such as Llama-3-8B or Mistral-7B, and on PyTorch, Hugging Face Transformers and PEFT to train and combine its adapters. Replacing the base model requires the adapters to be trained again.
-    \item Retrieval depends on a multilingual embedding model, such as BGE-M3 or Jina Embeddings v4, and on a vector database to store and search the passages.
+    \item Retrieval relies on two things, a multilingual embedding model, like BGE-M3 or Jina Embeddings v4, and a vector database that stores the passages and searches through them.
     \item The knowledge base depends on the scraping pipeline and on the structure of the source websites. A change in a website's layout can break its scraper.
     \item The web search feature depends on an external search service and an internet connection.
     \item Explaining scanned documents depends on Tesseract OCR with Urdu language support.
@@ -1740,13 +1741,13 @@ The system is not hosted on a server and runs on a single GPU with about 16 GB o
 There is no existing dataset of IR content written in English, Urdu and Urdish at different depths. The training data for the adapters therefore has to be generated with a language model and then reviewed by native speakers, which takes time and limits the size of the dataset. Urdish also has no standard spelling, which makes its quality harder to check.
  
 \subsubsection{Source Availability}
-The knowledge base relies on scraping external websites, which can change their layout or restrict access at any time. Their terms of use also limit how the content can be used, so paywalled content is excluded and scraped articles are used for research only.
+The knowledge base is made from scraping other websites, those websites can block access at any time. They can also limit what can be done with their content, so we leave out anything behind a paywall and use the scraped articles for research only.
  
 \subsubsection{Performance Requirements}
-The system should generate an explanation within about 20 seconds and respond to other actions, such as login and loading chats, within 2 seconds. These limits affect how many passages can be re-ranked and how long the generated explanations can be.
+The system should give an explanation in about 20 seconds and handle other actions like logging in or loading chats, within 2 seconds. These time limits decide how many passages we can re-rank and how long the explanations can be.
  
 \subsubsection{Security and Privacy}
-Passwords must be stored as salted hashes, each learner must be able to access only their own data, and uploaded documents must be deleted after the session and never added to the shared knowledge base.
+Each user should only access their own data. Any document a user uploads should be deleted when the session ends and should not be added to knowledge base. Password should also not be saved as plain text but as salted hashes.
  
 \subsubsection{Language and Script}
 Urdu must be displayed right-to-left, Urdish in Roman script and English left-to-right. Extracting text from scanned Urdu documents is also difficult, which limits the quality of explanations for such documents.
@@ -1758,25 +1759,25 @@ The goals and guidelines followed in the design and development of DiploMind are
 Following the KISS principle (``Keep it simple, stupid!''), each component starts with the simplest method that can work and is made more complex only if needed. For example, a fixed-rule scoring of the onboarding quiz is kept as an alternative to the adaptive quiz, and the adapters are first improved with the simplest training option before more advanced methods are tried.
  
 \subsubsection{Grounded and Reliable Answers}
-Since IR content is political and changes quickly, an explanation that is easy to read but not supported by a source is not acceptable. Every explanation is therefore based on retrieved sources and shows them, and the learner is told when no relevant source is found.
+IR is political and changes fast, so it is not enough for an explanation to be easy to read, it should also point to a source. If a reliable source is not found the user is told.
  
 \subsubsection{Safe Personalization}
 The system should never show a learner an explanation far from their level just to experiment. The bandit is only allowed to try neighbouring adapter pairs, and a learner who is moved to another group cannot be moved again until a cool-down period has passed.
  
 \subsubsection{Modularity}
-The base model, adapters, retriever, databases and bandit are designed as separate modules, so that any one of them can be replaced or extended without changing the others. This matters because the technologies used in the project change quickly.
+The technologies we use in this project change continuously, so the base model, adapters, retreiver, database and bandit are kept as separate modules. They can be changed without changing others.
  
 \subsubsection{User-Centric Design}
 The interface is designed to feel like the chat assistants that learners already use, so that it is familiar and needs no instructions. Computationally expensive work, such as scraping new articles and improving the adapters, runs in the background so that it does not slow down the learner.
 
  %\begin{comment}
 \subsection{Development Methods}
-The software design and development of DiploMind follows an agile and iterative approach. The project is divided into a research phase and a development phase, and during development the system is built in small increments, starting with the scraping pipeline and the adapters and then adding retrieval, onboarding, the feedback loop and drift detection. The waterfall model was considered, but it was not selected because the research parts of the project, such as how well the adapters combine and how the reward should be designed, have uncertain outcomes that may require earlier decisions to be revisited.
+The software design and development of DiploMind follows an agile and iterative approach. DiploMind has 2 phases, research and development. During the development the system is built in increments. We thought of waterfall model but did not select it because of the research parts, such as how to combine the adapters and how to design the reward signal as these may have uncertain outcomes. 
 %\end{comment}
 
  
 \section{System Architecture}
-This section outlines the architecture of DiploMind through diagrammatic representations. It gives a high-level overview of the system and describes how its responsibilities are divided among subsystems. The architecture of DiploMind consists of two main parts: the offline preparation part and the online learning part. The offline preparation part collects and processes articles to build the knowledge base, and prepares the data used to train the language and depth adapters. The online learning part serves the learner through the web interface: it places a new learner into a group, retrieves evidence and generates a personalized explanation for each question, and uses quiz results to update the adapter selection and detect misplaced learners. The web interface communicates with the backend through API requests, and the backend stores its data in a NoSQL database and a vector database. The high-level architecture of the system is shown in Figure~\ref{fig:architecture}.
+This part shows the architecture of system through high level diagrams. It also discusses the responsibilities of subsystems. Diplomind has mainly 2 parts: the offline preparation and the online learning part. The offline preparation part collects and prepares data for knowledge base and adapter training. The second part is actually what the user uses. When a new user arrives he is placed into a group. For every question, it retrieves the content and generates an explanation according to user profile. The adapters are also trained by the quiz results. The web interface talks to the backend through API requests and the backend keeps its data in a NoSQL database and vector database. The high-level architecture of the system is shown in Figure~\ref{fig:architecture}.
  
 \begin{figure}[H]
     \centering
@@ -1841,13 +1842,13 @@ The Feedback and Drift Detection subsystem consists of the quiz generator, the r
 The architectural strategies that we will be using for DiploMind are given below.
  
 \subsection{Tools and Software}
-The backend of DiploMind will be developed in Python using FastAPI. The language and depth adapters will be trained and combined using PyTorch, Hugging Face Transformers and PEFT on an open base model such as Llama-3-8B or Mistral-7B, with training carried out in Jupyter and Kaggle notebooks. For retrieval, a multilingual embedding model such as BGE-M3 or Jina Embeddings v4 will be used with a vector database and BM25 keyword search. Requests, BeautifulSoup and RSS feed parsers will be used to build the scrapers, and Tesseract OCR will be used to extract text from scanned documents. Git and GitHub will be used for version control and Draw.io for the design diagrams. Using Python across the backend, scraping and machine learning allows all parts of the system to be integrated easily.
+The backend of DiploMind will be developed in Python using FastAPI. The language and depth adapters will be trained and combined using PyTorch, Hugging Face Transformers and PEFT on an open base model such as Llama-3-8B or Mistral-7B, with training carried out in Jupyter and Kaggle notebooks. For retrieval, a multilingual embedding model such as BGE-M3 or Jina Embeddings v4 will be used with a vector database and BM25 keyword search. Requests, BeautifulSoup and RSS feed parsers will be used to build the scrapers, and Tesseract OCR will be used to extract text from scanned documents. Git and GitHub will be used for version control and Draw.io for the design diagrams. We use Python for the backend, the scraping, and the machine learning, so all the parts of the system fit together easily.
  
 \subsection{Client-Server Model}
-The project adopts a client-server model in which the web interface communicates with the backend through API requests. The backend handles sessions, retrieval, adapter selection and generation, so the interface only sends the learner's input and displays the result. This separation also allows another front end, such as a mobile application, to use the same backend in the future.
+DiploMind uses a client server setup. The web interface talks with backend through API requests and does work like managing sessions, retrieving sources, choosing adapter, and explanantion generation. The interface only sends what user types and shows what comes back. We could add another front end later, like a mobile app with the same backend.
  
 \subsection{Database}
-A NoSQL database such as MongoDB will be used to store users, conversations, messages, articles, the onboarding question bank and quiz responses, since these records are nested and their fields may change during development. The passages of the knowledge base and their embeddings will be stored separately in a vector database, which is designed for fast similarity search. The reasons for choosing a NoSQL database are discussed further in Section~6.7.2.
+Diplomind uses a NoSQL database like MongoDB for most of the data i.e., users, conversations, messages, articles, the onboarding question bank, and quiz responses. These records will probably keep changing during implementation. In the vector database, the passages and their embeddings will be stored.  The reasons for choosing a NoSQL database are discussed further in Section~6.7.2.
  
 \subsection{Adapter-Based Personalization}
 Instead of training a separate model for each of the nine groups, DiploMind uses one shared base model with six small LoRA adapters: three for language and three for depth. For each request, the selected language adapter and depth adapter are combined with the base model by weighted addition, which produces nine different behaviours from only six adapters. This reduces the training and memory cost, and a new language or depth level can be added by training a single new adapter.
@@ -1856,14 +1857,14 @@ Instead of training a separate model for each of the nine groups, DiploMind uses
 The facts used in explanations are kept in the knowledge base and retrieved for every question, instead of being learned into the model itself. This allows new articles to be added by the scraping pipeline without retraining the model, and allows every explanation to show its sources. The adapters therefore only control how the explanation is written, not what it says.
  
 \subsection{Interface Paradigms}
-The interface is based on a chat, which keeps it simple and familiar for learners of all levels of expertise. Questions, explanations, source links and the post-explanation quizzes all appear in the same chat, while document upload, web search and the language setting are available from the chat screen. Text is displayed in the correct direction and script for each language, so that each learner reads it in its natural form.
+The interface is a plain chat screen, which keeps it similar for users of all levels of expertise. Everything happens in the same conversation, questions, explanations, source links and short quiz after 5 to 10 questions. Uploading a document, searching the web, and changing the language are available on chat screen. Urdu text appears from right to left and English stays left to right in their normal form.
  
 \subsection{Future Plans for Extension}
-In the future, voice-based interaction and production-scale deployment, which are outside the current scope, can be added to make the system accessible to more users. More languages or depth levels can be supported by training new adapters, and a mobile application can be built on the existing backend. A bandit that gives less weight to old feedback can also be explored, so that the system adapts more quickly when a learner's needs change over time.
+For the future, voice based interaction and production scale deployment can be added to make the system more easy for the users to use. More adapters can be trained to support more languages or depths. A mobile application can also be built on the existing backend. A bandit that gives less weight to old feedback may be explored so that the system adapts more quickly.
 
  
 \section{Domain Model/Class Diagram}
-Figure~\ref{fig:classdiagram} shows the class diagram of DiploMind, which presents the main data classes of the system and the relationships between them. A User owns many Conversation objects, each of which contains many Message objects that cite the Article passages they were generated from. Learners also submit responses to the onboarding questions and to the quizzes taken during a conversation.
+Figure~\ref{fig:classdiagram} is the class diagram of DiploMind. It shows the main data classes in the system and how they connect to each other. A User owns many Conversation objects, each of which contains many Message objects that cite the Article passages they were generated from. Learners also submit responses to the onboarding questions and to the quizzes taken during a conversation.
 
 \begin{figure}[H]
     \centering
@@ -1923,16 +1924,16 @@ A sequence diagram is a type of UML (Unified Modeling Language) diagram that sho
 \end{figure}
 
 \section{Policies and Tactics}
-The following are the policies and tactics that will be followed in the project, along with the alternatives that were considered.
+Below are the policies and tactics Diplomind will follow, along with the other options we looked at before settling on them.
 
 \subsection{Coding Guidelines and Code Organization}
-The project is written mainly in Python, so we will follow the PEP~8 standard for naming, formatting and code layout, and document every module and public function with docstrings. The code will be split into separate packages for scraping, retrieval, adapters, the bandit, the drift monitor and the API, so that each part can be developed and tested on its own and new features can be added without changing the others. Tunable values such as the composition weights, the exploration parameter and the drift thresholds will be kept in configuration files instead of being hard-coded, and random seeds will be fixed in experiments so that results can be reproduced.
+The main language of Diplomind is python so the code will stick to PEP 8 and every module and public function will carry a docstring. There are different modules for scraping, retrieval, adapters, bandit, drift monitor so that each module can be built and tested alone and adding a new feature is not an issue. Settings that might need adjusting, such as the composition weights, the exploration parameter, and the drift thresholds, stay in config files rather than inside the code. 
 
 \subsection{Choice of Database}
-We will use a NoSQL document database for learner profiles, chats, interaction logs and quiz results. These records are nested and vary in shape, for example an interaction holds its retrieved passages, citations and the adapter pair used, and the logged fields are likely to change as the reward and bandit features are finalized. A relational database was considered, but it would need frequent schema changes during development and several joins to rebuild a single chat. The relations in DiploMind are simple (a learner has chats, and a chat has interactions), so the weaker join support of a document database is an acceptable trade-off.
+Diplomind uses NoSQL database that stores user profiles, chats, interaction logs and quiz results. These records keep changing as they have sources, adapter pair used, logged fields which will change as reward and bandit are finalized. We thought of using relational database but because it requires rewriting the schema again and again during development we went with NoSQL datbase. The relationships in Diplomind are simple, a user has chats and chats has interactions.
 
 \subsection{Choice of Algorithms}
-LinUCB was chosen for adapter selection because it explores according to its uncertainty instead of at random, which gave better results than $\epsilon$-greedy exploration when data were scarce \cite{li2010contextual}, and DiploMind will start with few learners. For personalization, six adapters are combined by weighted addition instead of training nine joint adapters, which would need more training data and a new adapter for every added language or depth. Personalization through the prompt alone was rejected, since earlier work found that prompting cannot reliably combine several preferences \cite{jang2023personalized}. If our ablation shows that composition does not preserve both language and depth, jointly trained adapters will be used as a fallback. For onboarding, the adaptive question selection of Shams et al. \cite{shams2021cluster} is preferred, with fixed-threshold scoring kept as a simpler alternative.
+LinUCB picks adapters based on how unsure it is about each option not picking it at random and thus gave better results than $\epsilon$ greedy exploration when data was limited \cite{li2010contextual}. Training 9 adapters need more data and addition of new language or depth would mean training another one so for personalization we combine six adapters and combine them with weights. We also rules out personalizing through prompt alone, because earlier research found that prompts can't hold several preferences at once \cite{jang2023personalized}. For onboarding, the adaptive question selection of Shams et al. \cite{shams2021cluster} is preferred.
 
 \subsection{Safe Exploration and Reassignment}
 The bandit may only choose the learner's current adapter pair or a neighbouring pair (one depth step up or down, or another language at the same depth), and its exploration parameter is kept small at first. Unrestricted exploration was rejected because it could show a technical explanation to a beginner simply as an experiment. Reassignment follows the same caution: a learner is moved only when a neighbouring group is expected to do better by a set margin, and a cool-down period after each move prevents the learner from being switched back and forth.
