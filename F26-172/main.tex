@@ -1464,6 +1464,8 @@ The approach has four stages, shown in Figure~\ref{fig:overview}.
 Keeping the two loops separate is deliberate. Choosing between existing adapter pairs is cheap and can happen after every quiz, whereas changing the adapters themselves is expensive and needs many results, so it is done in batches.
 
 \section{Data Collection and Dataset Construction}
+\label{sec:data-collection}
+
 \subsection{Source Selection and Scraping}
 The sources are Pakistani and international news and analysis outlets that publish in English and Urdu, together with foundational explainers on international relations. For every article the scraper stores the title, body text, publication date, URL, outlet and language. We use site-specific scrapers or RSS feeds. Paywalled content is excluded, and article text is used for research only and is not redistributed. So far we have built scraping pipelines and collected articles from the sources in Table~\ref{tab:sources}.
 
@@ -2206,6 +2208,227 @@ We chose \textbf{Llama 3.1 8B Instruct} as our base model, primarily because Urd
 \subsection{Limitations}
 This comparison used only 33 prompts per model, so small differences (such as 8/9 against 9/9) should not be over read. The checks are rule based and do not measure fluency, and some long outputs were cut off at the 400 token limit. The before/after evaluation of the trained adapters in the following sections gives a more direct test of whether Llama was a good choice.
 
+\section{Adapter Training and Evaluation}
+\label{sec:adapter-results}
+After selecting Llama 3.1 8B Instruct as the base model, we trained the six LoRA adapters on it, three for language (English, Urdu, Urdish) and three for depth (easy, medium, hard). This section describes the data and settings used for training, evaluation, and their results.
+
+\subsection{Setup}
+Below we describe how the adapters were trained and tested. First we describe which part of dataset each adapter is trained on  and how the data was split, then the training settings that we used across all adapters and finally the evaluation metrics to tell whether an adapter actually improved on base model or not.
+\subsubsection{Training Data}
+The adapters were trained on the DiploMind dataset described in Section~\ref{sec:data-collection}. Every article in the dataset has an explanation for all nine combinations of language and depth, and each adapter uses the part of this grid that matches its own target. A language adapter sees one language at all three depths, while a depth adapter sees one depth in all three languages. For example, an english adapter learns just to write english no matter what the depth is, and easy depth adapter learns to write in that style irrespective of the language user asked.
+
+The dataset was split by article, so that the same article never appears in both training and testing. Out of 583 articles, 466 were used for training, 58 for validation and 59 for testing. Since every adapter takes three explanations per article, each adapter has 1,398 training rows, 174 validation rows and 177 test rows, as shown in Table~\ref{tab:adapter-data}. Around half of the articles in every split come from Urdu news sources and the other half from English sources, so each adapter learns from both kinds of input.
+
+\begin{table}[H]
+\centering
+\caption{Training, validation and test data for each adapter}
+\label{tab:adapter-data}
+\small
+\begin{tabular}{|l|l|c|c|c|}
+\hline
+\textbf{Adapter} & \textbf{Rows used} & \textbf{Train} & \textbf{Validation} & \textbf{Test} \\ \hline
+English  & English, all three depths & 1,398 & 174 & 177 \\ \hline
+Urdu     & Urdu, all three depths    & 1,398 & 174 & 177 \\ \hline
+Urdish   & Urdish, all three depths  & 1,398 & 174 & 177 \\ \hline
+Easy     & Easy, all three languages   & 1,398 & 174 & 177 \\ \hline
+Medium   & Medium, all three languages & 1,398 & 174 & 177 \\ \hline
+Hard     & Hard, all three languages   & 1,398 & 174 & 177 \\ \hline
+\textbf{Articles} & & 466 & 58 & 59 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Training Configuration}
+All six adapters were trained with exactly the same settings, given in Table~\ref{tab:train-config}, so that any difference between them comes from their data and not from their settings. Each adapter was meant to be trained for 2 epochs but early stopping was configured and the validation loss was checked every 25 steps. The training stopped once the validation loss had not improved for three checks in a row. The checkpoint with the lowest validation loss was restored as the final adapter. The base model was loaded in 4-bit quantization and only the LoRA weights were trained, which allowed training on a single 16\,GB GPU. With rank 16, each adapter has about 41.9 million trainable parameters, which is only 0.52\% of the full model. LoRA was applied to all attention and feedforward layers of the model. Each training example was formatted with the Llama chat template, with a fixed system message, the instruction and the news article as the user message, and the explanation as the answer. If an example was longer than the maximum length of 3,072 tokens, the news article was shortened and the answer was kept complete. With this limit, the article had to be shortened in only 0--5\% of the training rows, the highest being the Urdu adapter (5.4\%), since Urdu text needs more tokens per word.
+
+\begin{table}[H]
+\centering
+\caption{Training configuration shared by all six adapters}
+\label{tab:train-config}
+\small
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Setting} & \textbf{Value} \\ \hline
+Base model & Llama 3.1 8B Instruct (4-bit) \\ \hline
+LoRA rank / alpha / dropout & 16 / 32 / 0.05 \\ \hline
+LoRA target layers & q, k, v, o, gate, up, down projections \\ \hline
+Learning rate & $2\times10^{-4}$, cosine schedule, 5\% warm-up \\ \hline
+Batch size & 1, with gradient accumulation of 8 (effective 8) \\ \hline
+Maximum sequence length & 3,072 tokens \\ \hline
+Epochs & Up to 2 (350 optimizer steps), with early stopping \\ \hline
+Optimizer & AdamW, gradient clipping at 0.3 \\ \hline
+Validation & 60 validation rows, every 25 steps \\ \hline
+Early stopping & Stop after 3 validations without improvement \\ \hline
+Final adapter & Checkpoint with the lowest validation loss \\ \hline
+Trainable parameters & 41.9M of 8.07B (0.52\%) \\ \hline
+Hardware & NVIDIA RTX A4000 (16\,GB) \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Evaluation Metrics}
+The adapters were evaluated in two ways: by their loss on the test set, and by checking the text they actually generate.
+
+\textbf{Test loss and perplexity:} The average loss of the model on all 177 test rows of the adapter, computed once with the adapter and once with the base model alone. A lower loss means the model finds the reference explanations more likely, and perplexity is the exponential of the loss.\\
+\textbf{Language adherence:} Whether the generated answer is in the requested language and script, using the same rule based checks as in the base model comparison (Section~\ref{sec:base-selection}).\\
+\textbf{Reading grade:} The Flesch--Kincaid grade level of the English answers, used to check that easy answers are simpler than medium ones and medium answers are simpler than hard ones.\\
+\textbf{chrF:} The character level similarity between the generated answer and the reference explanation. Character level matching works better than word matching for Urdu and Urdish, where the same word can be spelled in different ways.\\
+\textbf{Number recall:} The share of numbers in the source article that also appear in the answer, as a simple check that facts are kept.\\
+\textbf{Length and truncation:} The number of words in the answer compared to the reference, and how often the answer was cut off by the generation limit.
+
+For the generated text metrics, the base model and each adapter answered the same prompts from 12 test articles, half from Urdu sources and half from English sources which gives 36 prompts per adapter.
+
+\subsection{Training Behaviour}
+All six adapters were trained one after another on the same GPU and they took roughly 5 to 8 hours each, totalling to 38 hours of training time. Figure~\ref{fig:loss-each}shows for each adapter, the training loss which is logged after every 5 steps and the validation loss, logged after 25 steps. Figure~\ref{fig:val-loss} puts the validation curves of all adapters side by side so they can be compared.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_lang_en.png}\\ \small (a) English adapter
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_lang_ur.png}\\ \small (b) Urdu adapter
+    \end{minipage}\\[8pt]
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_lang_urdish.png}\\ \small (c) Urdish adapter
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_depth_easy.png}\\ \small (d) Easy adapter
+    \end{minipage}\\[8pt]
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_depth_medium.png}\\ \small (e) Medium adapter
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/loss_depth_hard.png}\\ \small (f) Hard adapter
+    \end{minipage}
+    \caption{Training and validation loss of each of the six adapters}
+    \label{fig:loss-each}
+\end{figure}
+
+n all cases, both the training and validation losses fell steadily during first epoch and the validation loss stayed somewhat close to the train loss which indicates the model is learning generalization over unseen text. The adapters for Urdish, easy, medium and hard were at their lowest point exactly by the end of epoch 1, while the English and urdu adapters converged to a minima before completing the full epoch. At the start of epoch 2, we can see some signs of overfitting as the training loss decreased suddenly while the validation loss started to rise, which is visible as a step in the plots of Figure~\ref{fig:loss-each}. This means that the adapters began to memorise the training explanations instead of learning something that carries over to new articles. Because of the early stopping, training stopped once we knew that there's no room for improvement now and the already best checkpoints were kept as final adapters.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/val_loss_curves.png}
+    \caption{Validation loss of the language adapters (left) and depth adapters (right) during training. The star marks the checkpoint that was kept as the final adapter.}
+    \label{fig:val-loss}
+\end{figure}
+
+The Urdu adapter has a much lower loss than the others throughout training. This does not mean it learned more, since loss depends on the tokenizer. Urdu text is split into about three tokens per word, and many of these tokens are easy to predict from the ones before them, which lowers the average loss. This is why loss values are only compared between the base model and an adapter and not between different adapters.
+
+
+\subsection{Test Loss}
+After training, each adapter was evaluated on all 177 rows of its test set once with the base model and once with the adapter. Table~\ref{tab:test-loss} shows the results.
+
+\begin{table}[H]
+\centering
+\caption{Test loss and perplexity of the base model and each adapter on the adapter's test set (177 rows)}
+\label{tab:test-loss}
+\small
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Adapter} & \textbf{Base loss} & \textbf{Adapter loss} & \textbf{Reduction} & \textbf{Base ppl.} & \textbf{Adapter ppl.} \\ \hline
+English & 1.155 & 0.652 & 43.6\% & 3.17 & 1.92 \\ \hline
+Urdu    & 0.534 & 0.359 & 32.9\% & 1.71 & 1.43 \\ \hline
+Urdish  & 1.465 & 0.811 & 44.7\% & 4.33 & 2.25 \\ \hline
+Easy    & 1.159 & 0.680 & 41.3\% & 3.19 & 1.97 \\ \hline
+Medium  & 1.082 & 0.622 & 42.6\% & 2.95 & 1.86 \\ \hline
+Hard    & 0.913 & 0.536 & 41.3\% & 2.49 & 1.71 \\ \hline
+\end{tabular}
+\end{table}
+
+Every adapter lowered the test loss of the base model by 33\% to 45\%. The largest difference was between the base model and the Urdish adapter, which makes sense because Urdish was the weakest point in base model selection output of Llama, so the adapter actually learnt how to write in Urdish a lot better than base model's capability. The depth adapters follow a similar story where test loss decreased by a figure of 41\% to 43\% which shows that thea adapters learnt following depth instructions as well. The Urdu adapter had the smallest relative drop, because the base model's Urdu loss was already low for the tokenizer reason explained above.
+
+\subsection{Language and Depth Following}
+Lower loss shows that the adapter answers in  reference explanation style more likely but it doesn't verify the quality of the written answer. So we generated answers with the base model and with each adapter for the same 12 test articles (6 urdu and 6 english) taken from the actual test set. Each adapter answered 36 prompts and the base model answered same prompts without any adapter.
+
+\subsubsection{Language Adapters}
+Table~\ref{tab:lang-following} shows how often each model answered in the requested language and script, along with the chrF similarity to the reference explanation and how often the answer used markdown formatting.
+
+\begin{table}[H]
+\centering
+\caption{Language following of the base model and the language adapters on the same 36 prompts per adapter (B = base, A = adapter)}
+\label{tab:lang-following}
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+ & \multicolumn{2}{c|}{\textbf{Correct lang.}} & \multicolumn{2}{c|}{\textbf{Urdu-source}} & \multicolumn{2}{c|}{\textbf{chrF}} & \multicolumn{2}{c|}{\textbf{Markdown}} \\ \cline{2-9}
+\textbf{Adapter} & \textbf{B} & \textbf{A} & \textbf{B} & \textbf{A} & \textbf{B} & \textbf{A} & \textbf{B} & \textbf{A} \\ \hline
+English & 83.3\% & 100\% & 66.7\% & 100\% & 41.8 & 62.1 & 66.7\% & 0\% \\ \hline
+Urdu    & 100\%  & 100\% & 100\%  & 100\% & 42.7 & 58.5 & 19.4\% & 0\% \\ \hline
+Urdish  & 38.9\% & 100\% & 0\%    & 100\% & 16.4 & 59.2 & 25.0\% & 0\% \\ \hline
+\end{tabular}
+\end{table}
+
+All three language adapters answered in the correct language and correct script in every prompt. The base model however, struggled with following language. When the source article was in urdu the base model tended to answer in Urdu instead of following the prompt. This was seen in 6 out of 18 english prompts and all 18 Urdish prompts on urdu source articles. On english sources, the base model did better but still failed 4 out of 18 urdish prompts, and in some answers its Urdish used hindi words such as ``mahatvapurn'' and ``darshata'' instead of Urdu ones. The adapters removed this problem completely with now the output being always in requested language.
+
+The adapters also made the outputs more identical to the reference answers, with chrF rising by 16 to 43 points, and the largest gain was for Urdish. They also stopped using markdown headings and bullet points which the base model used in nearly 2\/3rd of its english answers.
+
+\subsubsection{Depth Adapters}
+Checking depth is harder than verifying language since there is no rule for whether the answer is easy or technical. We used two signals, shown in Table~\ref{tab:depth-following}: the Flesch--Kincaid reading grade of English answers and the average number of times phrases such as ``means'', ``refers to'', ``matlab'' or ``yaani'' are used. The same values for the reference explanations are given for comparison.
+
+\begin{table}[H]
+\centering
+\caption{Depth following of the base model (B), the depth adapters (A) and the reference explanations (R)}
+\label{tab:depth-following}
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+ & \multicolumn{3}{c|}{\textbf{Reading grade (En)}} & \multicolumn{3}{c|}{\textbf{Explanations}} & \multicolumn{2}{c|}{\textbf{chrF}} \\ \cline{2-9}
+\textbf{Depth} & \textbf{B} & \textbf{A} & \textbf{R} & \textbf{B} & \textbf{A} & \textbf{R} & \textbf{B} & \textbf{A} \\ \hline
+Easy   & 9.0  & 9.5  & 9.5  & 0.78 & 1.94 & 2.17 & 28.3 & 57.2 \\ \hline
+Medium & 14.2 & 14.5 & 14.1 & 0.11 & 0.92 & 1.42 & 34.2 & 62.1 \\ \hline
+Hard   & 15.7 & 14.4 & 13.7 & 0.25 & 0.11 & 0.08 & 38.4 & 63.7 \\ \hline
+\end{tabular}
+\end{table}
+
+The depth adapters were very good at following the reference explanation style. The clearest signal that separates base and adapter is the number of term explanations. The easy adapter explained roughly 2 terms per answer, the medium one about 1 term and the hard adapter explained none, which is the case for reference answers as well (2.17, 1.42 and 0.08). The base model however, doesn't follow this pattern, explaining few terms at every depth and more at hard than at medium. The easy adapter also wrote at a lower reading grade (9.5) than the medium and hard adapters (14.5 and 14.4), again matching the references. The reading grade does not separate medium from hard, but this is also true of the references themselves because the hard explanations use more technical words but shorter and denser text, which the Flesch--Kincaid formula cannot capture. The base model's higher reading grade for hard answers came mostly from its longer sentences and bulleted lists rather than from a more technical explanation.
+
+\subsection{Faithfulness to the Source}
+An explanation is only useful if it keeps the facts of the article. As a simple and automatic check, we compared the numbers (dates, amounts, counts and percentages) in each answer with those in the source article and in the reference explanation. Table~\ref{tab:faithfulness} reports two measures: \textbf{number recall}, the share of numbers in the reference explanation that also appear in the answer, and \textbf{number precision}, the share of numbers in the answer that also appear in the source article.
+
+\begin{table}[H]
+\centering
+\caption{Number recall and number precision of the base model and the adapters}
+\label{tab:faithfulness}
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+ & \multicolumn{2}{c|}{\textbf{Number recall}} & \multicolumn{2}{c|}{\textbf{Number precision}} \\ \cline{2-5}
+\textbf{Adapter} & \textbf{Base} & \textbf{Adapter} & \textbf{Base} & \textbf{Adapter} \\ \hline
+English & 46.2\% & 76.0\% & 52.9\% & 83.2\% \\ \hline
+Urdu    & 35.6\% & 82.6\% & 97.0\% & 77.1\% \\ \hline
+Urdish  & 40.7\% & 85.7\% & 88.2\% & 77.0\% \\ \hline
+Easy    & 25.3\% & 83.7\% & 62.6\% & 79.4\% \\ \hline
+Medium  & 36.5\% & 92.6\% & 73.5\% & 78.1\% \\ \hline
+Hard    & 60.7\% & 91.0\% & 91.8\% & 76.6\% \\ \hline
+\textbf{All} & \textbf{40.8\%} & \textbf{85.3\%} & \textbf{77.7\%} & \textbf{78.5\%} \\ \hline
+\end{tabular}
+\end{table}
+
+The adapters usually kept more key facts and statistical details than the base model. On average, the adapter answers contained 85\% of the numbers in the reference explanation, against 41\% for the base model. The base model often skipped numbers which is possible due to two things, either the explanation got cut off before reaching that fact, or the base model explained terms in general instead of following a news reporting format.
+
+However number precision is not a reliable measure on its own. It only counts a number as correct if the exact same digit appears in the source as well. But often news articles writes numbers in words such as "eight protestors", or a number written out in urdu which might not be the case in the explanation. In such cases, the number is correct but the check marks it incorrect only because its not in the same format, and sometimes the model can just score higher by copypasting the news instead of actually giving its own explanation. For this reason we treat number recall as the main measure since it compare explanation with the reference and reference is more likely to be identical.
+
+\subsection{Output Comparison}
+Table~\ref{tab:adapter-output} shows the answers of the base model and the adapter for two test articles. In the first example, an easy Urdish explanation of a news article about a Nepra public hearing on electricity prices, the base model starts by talking to the reader, then gives a numbered glossary of terms with Hindi words such as ``mukhya shabdon'' (main words), ``jimmewar'' (responsible) and ``niyantrit'' (controlled), and several of its definitions do not make sense. The Urdish adapter instead reports the news in plain Roman Urdu, keeps the key figures (Rs32 and Rs22.98 per unit), and explains terms such as Nepra and public hearing inside the text. In the second example, an easy English explanation of a BBC Urdu article on inflation, the base model ignored the requested language and wrote a glossary of terms in Urdu script, while the easy adapter wrote in English, followed the news and explained each term in simple words.
+
+\begin{table}[H]
+\centering
+\caption{Answers of the base model and the adapter for two test articles. Long answers are shortened, marked with [\dots]}
+\label{tab:adapter-output}
+\small
+\begin{tabular}{|p{0.13\textwidth}|p{0.38\textwidth}|p{0.38\textwidth}|}
+\hline
+\textbf{Prompt} & \textbf{Base model} & \textbf{Adapter} \\ \hline
+Urdish, easy (Urdish adapter) & Mujhe maloom hai ki aapko is news ki wajah se kuch samajh nahin a rahi hai. Main aapko is news ko aasani se samjhane ki koshish karoonga. Is news mein kuch mukhya shabdon ka istemaal hua hai [\dots] 1. Power Division: Yeh Pakistan ke sarkari department hai, jo electricity ki khatron ke liye jimmewar hai. 2. Nepra: [\dots] jo electricity ki dauraan ki khatron ko niyantrit karta hai. [\dots] & National Electric Power Regulatory Authority (Nepra) ek government body hai jo electricity ke prices aur supply ke rules set karta hai. Nepra ne ek public hearing bulaya. Public hearing mein logon ko apne views pesh karne ka mauqa milta hai. Nepra ke case officers [\dots] ne bataya ke average power supply ki cost ab Rs32 per unit hai. Yeh December 10, 2022 ko industrial consumers ko offer ki gayi Rs22.98 per unit se zyada hai. [\dots] \\ \hline
+English, easy (Easy adapter) & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/base_urdu_inflation.png}} & The Prime Minister of Pakistan, Shehbaz Sharif, leads an alliance government. An alliance government means a government made by several parties together. [\dots] He claimed that during his time in office, inflation was reduced from 30 percent to 5.5 percent. Inflation means prices rising. [\dots] \\ \hline
+\end{tabular}
+\end{table}
+
+These examples show the two main changes the adapters made. First, the language of the answer now follows the instruction instead of the article, and the Urdish is written in Urdu vocabulary rather than Hindi. Second, the answer reports the news itself in the style of the requested depth, explaining terms inside the text, instead of turning into a general glossary or a long list.
+
+\subsection{Limitations}
+The evaluation used 12 test articles, so each adapter was judged on 36 prompts. This is enough to show large differences such as language instruction following but small differences between adapters should not be overread. All the quality checks are automatic, rule based checks, for example the language checks looks at script and common words, chrF measures closeness to the reference answer rather than checking correctness, and number matching cannot recognize numbers written as words. The reading-grade works only for English and cannot be applied on Urdish or Urdu. The reading grade couldn't separate medium and hard depth, even for the references due to the word count being similar. Also, every adapter was trained once with random seed, so we do not know how much the results would vary between runs.
 
 \begin{comment}
 \chapter{Conclusions}
