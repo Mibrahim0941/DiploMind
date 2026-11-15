@@ -2426,6 +2426,63 @@ These examples show the two main changes the adapters made. First, the language 
 \subsection{Limitations}
 The evaluation used 12 test articles, so each adapter was judged on 36 prompts. This is enough to show large differences such as language instruction following but small differences between adapters should not be overread. All the quality checks are automatic, rule based checks, for example the language checks looks at script and common words, chrF measures closeness to the reference answer rather than checking correctness, and number matching cannot recognize numbers written as words. The reading-grade works only for English and cannot be applied on Urdish or Urdu. The reading grade couldn't separate medium and hard depth, even for the references due to the word count being similar. Also, every adapter was trained once with random seed, so we do not know how much the results would vary between runs.
 
+\section{Composed vs.\ Jointly Trained Adapters}
+\label{sec:composed-vs-joint}
+Our project DiploMind has three languages and three depth explanation styles. Which gives us nine combinations in which explanations can be generated. One way to achieve this is to train separate adapters for each combination, other is to train only six adapters and use linear composition functions to achieve the behaviour of 9, or maybe more combinations in future. Our proposed approach was to use the latter one in which we train separate language and depth adapters and combine them using weighted linear compositions on runtime. This section test exactly that whether combining two or more adapters this way gives results closer to separately trained adapters, and how much training cost and resources can be saved if our approach works.
+
+\subsection{Setup}
+This portion describes how the jointly trained adapters are used as a baseline for comparison against composition, how the composition weights were chosen and how the two methods were compared.
+
+\subsubsection{Jointly Trained Adapters}
+To formulate a baseline, we trained 9 joint adapters from the already created DiploMind training dataset. Each adapter was trained on one combination of language and depth, such as Urdish+easy etc. All nine adapters were trained with exactly the same settings as the six separate adapters (Table~\ref{tab:train-config}). The joint adapters split the dataset in a different way though. Each adapter now sees only 466 rows of training samples as compared to almost triple the number of rows in our previous approach.
+
+\subsubsection{Composition Method}
+Before moving forward, we need to understand how LoRA adapters work. They dont replace the weights of base model, instead they add a small change to them. For every layer LoRA is applied to, it stores two small matrices $A$ and $B$, and the change to the original weight $W_0$ is $\Delta W = \frac{\alpha}{r} B A$. This simple matrix operation is what makes it possible to add changes of two adapters at once to the same base model. To produce an answer in language $l$ at depth $d$, we combine the language adapter for $l$ and the depth adapter for $d$:
+
+\begin{equation}
+W = W_0 + \lambda_L \, \Delta W_{\mathrm{lang}(l)} + \lambda_D \, \Delta W_{\mathrm{depth}(d)}
+\label{eq:composition}
+\end{equation}
+
+Here $\lambda_L$ and $\lambda_D$ are the weights that control how much effect does each adapter has on the composition. With $\lambda_L = \lambda_D = 1$, both adapters are added at full strength. Lower the weight, weaker the effect of that adapter is and vice versa. This way no new training is needed, and the same six adapters can produce all nine combinations.
+
+\subsubsection{Choosing the Weights}
+As our approach was to train adapters separately, adding them at full strngth may not work the best since both adapters changed the same layers of our model, they may partly overlap due to the nature of our dataset since every depth adapter was also trained on text in all three languages. We therefore searched for the best weights instead of fixing them.
+
+For both $\lambda_L$ and $\lambda_D$ we tried the values 0.25, 0.5, 0.75, 1.0 and 1.25, which gives 25 pairs. Each pair was evaluated on 40 validation rows of every combination and the validation loss was recorded. From this search we took two settings:
+
+\textbf{Global weights:} The single pair of weights with the lowest validation loss averaged over all nine combinations. This is the simpler setting, as the same two weights are used for every request.\\
+\textbf{Per-combination weights:} A separate best pair for each of the nine combinations. This can fit each combination better, but it needs nine stored pairs of weights.
+
+The weights were chosen only on the validation rows, and the test rows were used only once at the end, so the test results are not influenced by the search.
+
+\subsubsection{Compared Methods}
+For each of the nine combinations, the methods in Table~\ref{tab:comp-methods} were evaluated on the same test rows. Besides the main comparison between composition and joint training, the base model and the single adapters are included as reference points, to show how much each adapter contributes on its own.
+
+\begin{table}[H]
+\centering
+\caption{Methods compared in the composition experiment}
+\label{tab:comp-methods}
+\small
+\begin{tabular}{|p{0.30\textwidth}|p{0.60\textwidth}|}
+\hline
+\textbf{Method} & \textbf{Description} \\ \hline
+Base model & Llama 3.1 8B Instruct without any adapter \\ \hline
+Language adapter only & Only the language adapter of the combination, at full strength \\ \hline
+Depth adapter only & Only the depth adapter of the combination, at full strength \\ \hline
+Composed (1, 1) & Language and depth adapters added at full strength, $\lambda_L = \lambda_D = 1$ \\ \hline
+Composed (global weights) & Language and depth adapters with the best global weights from the validation search \\ \hline
+Composed (per-combination weights) & Language and depth adapters with the best weights for that combination \\ \hline
+Joint adapter & The adapter trained only on that combination (baseline) \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Evaluation Metric}
+We compared all methods using the test loss on reference explanations, in the same way as done in Section~\ref{sec:adapter-results}. The model is given the prompt and the source article, and the reference output and the model generated output were compared with each other using test loss. Lower the loss is, more the model's output is aligned with the reference. We also reported perplexity which is just another way of representing the loss.
+
+Because every method is measured on the same test rows of the same combination, their losses can be compared directly. Before running the comparison, we also checked that no test article appears in the training data of either the component adapters or the joint adapters.
+
+
 \begin{comment}
 \chapter{Conclusions}
 \section{aa}
