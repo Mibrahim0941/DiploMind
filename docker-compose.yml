@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    env_file: .env
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: diplomind
+      WATCHFILES_FORCE_POLLING: "true"  
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
+    name: data_scrapper_mongo_data
