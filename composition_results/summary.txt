@@ -1,0 +1,31 @@
+Test loss per group (lower is better)
+
+method               base  lang_only  depth_only  composed_1_1  composed_global  composed_percell  joint
+group                                                                                                   
+eng_easy            1.283      0.775       0.744         0.841            0.737             0.737  0.761
+eng_hard            0.965      0.531       0.530         0.613            0.514             0.514  0.537
+eng_med             1.177      0.634       0.629         0.723            0.612             0.612  0.645
+ur_easy             0.611      0.407       0.395         0.492            0.384             0.384  0.395
+ur_hard             0.459      0.325       0.322         0.414            0.307             0.307  0.321
+ur_med              0.565      0.375       0.378         0.483            0.359             0.359  0.373
+urdish_easy         1.592      0.905       0.920         1.092            0.881             0.881  0.923
+urdish_hard         1.310      0.731       0.770         0.909            0.716             0.714  0.769
+urdish_med          1.500      0.817       0.864         1.031            0.808             0.804  0.858
+MEAN (groups equal) 1.051      0.611       0.617         0.733            0.591             0.590  0.620
+
+global lambda (L, D) = (0.5, 0.5)
+
+composed (global lambda) minus joint, per group (negative = composition better):
+group
+eng_easy      -0.024
+eng_hard      -0.024
+eng_med       -0.033
+ur_easy       -0.012
+ur_hard       -0.013
+ur_med        -0.014
+urdish_easy   -0.042
+urdish_hard   -0.053
+urdish_med    -0.050
+composition better in 9 of 9 groups | mean difference -0.029
+
+composed (per-group lambda) minus joint: better in 9 of 9 groups | mean difference -0.030
