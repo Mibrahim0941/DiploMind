@@ -1,23 +1,33 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-// Put your logo file in the /public folder (e.g. public/logo.png) and
-// reference it with an absolute path. Change this if your file is named differently.
 import logo from "../assets/logo.png";
+import { login, saveSession } from "../api";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
+      setError("Please fill in all fields.");
       return;
     }
-    navigate("/chat");
+
+    setLoading(true);
+    try {
+      const res = await login({ email, password });
+      saveSession(res);
+      // Use case 2, flow 3-C: quiz first if onboarding isn't done
+      navigate(res.user.onboarding_completed ? "/chat" : "/onboarding");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -31,7 +41,6 @@ export default function LoginPage() {
           backgroundSize: "40px 40px, 40px 40px, 100% 100%",
         }}
       >
-        {/* Logo + title (mt-10 lowers it; adjust to taste) */}
         <div className="mt-10 flex items-center gap-4">
           <img
             src={logo}
@@ -43,7 +52,6 @@ export default function LoginPage() {
           </span>
         </div>
 
-        {/* Headline block, vertically centered in the remaining space */}
         <div className="flex flex-1 flex-col justify-center">
           <h2 className="font-serif text-4xl font-semibold leading-tight">
             World affairs, explained
@@ -134,9 +142,11 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#13294b] px-6 py-3 text-base font-semibold text-white shadow-md shadow-slate-900/10 transition hover:bg-[#0d1f3a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#13294b] focus-visible:ring-offset-2"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#13294b] px-6 py-3 text-base font-semibold text-white shadow-md shadow-slate-900/10 transition hover:bg-[#0d1f3a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#13294b] focus-visible:ring-offset-2 disabled:opacity-60"
             >
-              Sign in <span aria-hidden="true">→</span>
+              {loading ? "Signing in..." : "Sign in"}{" "}
+              <span aria-hidden="true">→</span>
             </button>
           </form>
 

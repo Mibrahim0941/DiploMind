@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-// Same logo setup as LoginPage. If you switched LoginPage to
-// `import logo from "../assets/logo.png"`, do the same here and use src={logo}.
 import logo from "../assets/logo.png";
+import { saveSession, signup } from "../api";
 
 const inputClass =
   "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20";
@@ -16,14 +14,43 @@ export default function SignupPage() {
     password: "",
     confirm: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   function update(field: keyof typeof form, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setError(null);
   }
 
-  function handleSubmit(ev: React.SyntheticEvent<HTMLFormElement>) {
+  async function handleSubmit(ev: React.SyntheticEvent<HTMLFormElement>) {
     ev.preventDefault();
-    navigate("/onboarding");
+    setError(null);
+
+    // Same checks as the backend (use case 1), so the user sees errors instantly
+    if (!form.name.trim() || !form.email.trim() || !form.password || !form.confirm) {
+      setError("Please fill in all fields with valid values.");
+      return;
+    }
+    if (form.password.length < 8 || form.password !== form.confirm) {
+      setError("The password must be at least eight characters long and match the confirmation.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await signup({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        confirm_password: form.confirm,
+      });
+      saveSession(res);
+      navigate("/onboarding");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function field(
@@ -65,7 +92,6 @@ export default function SignupPage() {
           backgroundSize: "40px 40px, 40px 40px, 100% 100%",
         }}
       >
-        {/* Logo + title (mt-10 lowers it; adjust to taste) */}
         <div className="mt-10 flex items-center gap-4">
           <img
             src={logo}
@@ -77,7 +103,6 @@ export default function SignupPage() {
           </span>
         </div>
 
-        {/* Headline block, vertically centered in the remaining space */}
         <div className="flex flex-1 flex-col justify-center">
           <h2 className="font-serif text-4xl font-semibold leading-tight">
             World affairs, explained
@@ -112,6 +137,15 @@ export default function SignupPage() {
           </header>
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            {error && (
+              <p
+                role="alert"
+                className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+              >
+                {error}
+              </p>
+            )}
+
             {field("name", "Full name", "text", "Your name", "name")}
             {field("email", "Email", "email", "name@example.com", "email")}
             {field(
@@ -131,9 +165,11 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#13294b] px-6 py-3 text-base font-semibold text-white shadow-md shadow-slate-900/10 transition hover:bg-[#0d1f3a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#13294b] focus-visible:ring-offset-2"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#13294b] px-6 py-3 text-base font-semibold text-white shadow-md shadow-slate-900/10 transition hover:bg-[#0d1f3a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#13294b] focus-visible:ring-offset-2 disabled:opacity-60"
             >
-              Create account <span aria-hidden="true">→</span>
+              {loading ? "Creating account..." : "Create account"}{" "}
+              <span aria-hidden="true">→</span>
             </button>
           </form>
 
