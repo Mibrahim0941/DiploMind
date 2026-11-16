@@ -2482,6 +2482,214 @@ We compared all methods using the test loss on reference explanations, in the sa
 
 Because every method is measured on the same test rows of the same combination, their losses can be compared directly. Before running the comparison, we also checked that no test article appears in the training data of either the component adapters or the joint adapters.
 
+\subsection{Training of the Joint Adapters}
+Each joint adapter had only 466 rows to train on as compared to 1398 rows in separately trained language and depth adapters, so jointly trained had about 118 optimizer steps over 2 epochs and separately trained had 350 steps. Figure~\ref{fig:joint-val} shows the validation loss of the nine joint adapters during training.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/joint_val_loss.png}
+    \caption{Validation loss of the nine joint adapters, grouped by language. The star marks the checkpoint kept as the final adapter.}
+    \label{fig:joint-val}
+\end{figure}
+
+However, the training behaviour was different for jointly trained adapters as compared to separately trained ones. None of the joint adapters stopped early and ran for full 2 epochs. The adapters behaved differently though with the english adapters reaching an optima at about step 50 and then showed signs of overfitting. So it ran only for one epoch approximately. For Urdu and Urdish, all adapters kept on decreasing the val loss even after running full which shows that they converged a lot later, finishing 2 epochs and might still have some room for improvement. All nine joint adapters still lowered the loss of the base model on their test rows by between about 31\% and 45\%, a similar improvement to the separate adapters.
+
+\subsection{Results}
+
+\subsubsection{Choice of Weights}
+Figure~\ref{fig:lambda-grid} Shows the valudation loss for every pair of lambdas which are averaged over all the 9 combinations. The best pair was $\lambda_L = \lambda_D = 0.5$, with a validation loss of 0.598. This pair was also the best for 7 out of 9 groups which means that 7 groups call these weights the best for composition. Urdish medium and Urdish hard disagrees with their preferred weight pair being ($\lambda_L = 0.75$, $\lambda_D = 0.25$), but still the difference is very small, as a result the global weights for composition gave almost same test results.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Figures/composition_lambda_grid.png}
+    \caption{Validation loss for each pair of weights $(\lambda_L, \lambda_D)$, averaged over the nine combinations. Darker is better.}
+    \label{fig:lambda-grid}
+\end{figure}
+
+The figure also shows that the best pair of weights lie across the diagonal where two weights add up to one, such as (0.25, 0.75), (0.5, 0.5) and (0.75, 0.25), and the loss gets worse as both weights grow. Adding both adapters at full strength, $(1, 1)$, gave a validation loss of 0.735, and $(1.25, 1.25)$ gave the worst result. The reason being that two composite adapters overlap in their data and also learned the style DiploMind explains news, so adding adapters at full or higher strengths overshoots the model weights. Using half of each keeps right strength of both behaviours without it showing signs of overfitting.
+
+Figure~\ref{fig:lambda-grid-all} shows the same search separately for each of the nine combinations. For most combinations the best cell is $(0.5, 0.5)$, while for Urdish at the medium and hard depths it moves one step to $(0.75, 0.25)$, giving slightly more weight to the language adapter, but the values around it are almost the same.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_eng_easy.png}\\ \footnotesize English, easy
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_eng_med.png}\\ \footnotesize English, medium
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_eng_hard.png}\\ \footnotesize English, hard
+    \end{minipage}\\[6pt]
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_ur_easy.png}\\ \footnotesize Urdu, easy
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_ur_med.png}\\ \footnotesize Urdu, medium
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_ur_hard.png}\\ \footnotesize Urdu, hard
+    \end{minipage}\\[6pt]
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_urdish_easy.png}\\ \footnotesize Urdish, easy
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_urdish_med.png}\\ \footnotesize Urdish, medium
+    \end{minipage}\hfill
+    \begin{minipage}{0.32\textwidth}\centering
+        \includegraphics[width=\linewidth]{Figures/lambda_heatmap_urdish_hard.png}\\ \footnotesize Urdish, hard
+    \end{minipage}
+    \caption{Validation loss for each pair of weights $(\lambda_L, \lambda_D)$, shown separately for each combination of language (rows) and depth (columns). Darker is better.}
+    \label{fig:lambda-grid-all}
+\end{figure}
+
+
+\subsubsection{Test Loss}
+Table~\ref{tab:comp-test-loss} gives the test loss of each method for all nine combinations, and Figure~\ref{fig:comp-bars} shows the same results as a chart.
+
+\begin{table}[H]
+\centering
+\caption{Test loss of each method for the nine combinations (lower is better). Composed uses the global weights $\lambda_L = \lambda_D = 0.5$}
+\label{tab:comp-test-loss}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Combination} & \textbf{Base} & \textbf{Lang. only} & \textbf{Depth only} & \textbf{Comp. (1, 1)} & \textbf{Composed} & \textbf{Joint} \\ \hline
+English, easy    & 1.283 & 0.775 & 0.744 & 0.841 & \textbf{0.737} & 0.761 \\ \hline
+English, medium  & 1.177 & 0.634 & 0.629 & 0.723 & \textbf{0.612} & 0.645 \\ \hline
+English, hard    & 0.965 & 0.531 & 0.530 & 0.613 & \textbf{0.514} & 0.537 \\ \hline
+Urdu, easy       & 0.611 & 0.407 & 0.395 & 0.492 & \textbf{0.384} & 0.395 \\ \hline
+Urdu, medium     & 0.565 & 0.375 & 0.378 & 0.483 & \textbf{0.359} & 0.373 \\ \hline
+Urdu, hard       & 0.459 & 0.325 & 0.322 & 0.414 & \textbf{0.307} & 0.321 \\ \hline
+Urdish, easy     & 1.592 & 0.905 & 0.920 & 1.092 & \textbf{0.881} & 0.923 \\ \hline
+Urdish, medium   & 1.500 & 0.817 & 0.864 & 1.031 & \textbf{0.808} & 0.858 \\ \hline
+Urdish, hard     & 1.310 & 0.731 & 0.770 & 0.909 & \textbf{0.716} & 0.769 \\ \hline
+\textbf{Mean}    & 1.051 & 0.611 & 0.617 & 0.733 & \textbf{0.591} & 0.620 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/composition_comparison.png}
+    \caption{Test loss of each method for the nine combinations of language and depth}
+    \label{fig:comp-bars}
+\end{figure}
+
+The composed adapters had the lowest test lost in all nine combinations which means the the composition works and apparently the style being followed by composed adapters is closer to the references. On average the composed adapters test loss across all groups was 0.591 as comapred to 0.62 for joint adapters. The gap was the smallest for Urdu (about 0.01) and largest for Urdish (0.05) which is the language where the base model was weakest, so composition does help. All adapter based methods were far better than the base model, which had an average loss of 1.051.
+
+But there is a caveat, that composition works only with the right weights, as supported in the section above adding adapters at full weights made it overshoot. The other finding is that depth adapter only and language adapter only, were slightly better than joint ones which suggests that a large part of the learning comes from the size of dataset, and since joint adapters had less samples than the separately trained ones, the didn't generalize that well. Also composition with right weights adds a further performance gain on the best single adapter because it has learned some features twice and weights add them in such a way they don't overshoot.
+
+\subsubsection{Generated Answers}
+ A lower loss does not necessarily mean that the composed model still produces the desired output, since adding two adapters at 0.5 weights could weaken their effect. To check this, we generated answers of every combination with composed adapters and with joint adapters as well, for six articles from our test set and looked at two things, whether the anwer was in requested language and whether its style changed with requested depth.
+
+Both the composed and the joint adapters wrote all their answers in correct language and script. For depth, Table~\ref{tab:comp-depth} compares two simple signals with the reference explanations: the average sentence length, and the number of term explanations (such as ``means'' or ``ka matlab hai'') per 100 words.
+
+\begin{table}[H]
+\centering
+\caption{Depth signals in the generated answers of the composed and joint adapters, compared with the reference explanations}
+\label{tab:comp-depth}
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+ & \multicolumn{3}{c|}{\textbf{Words per sentence}} & \multicolumn{3}{c|}{\textbf{Explanations per 100 words}} \\ \cline{2-7}
+\textbf{Depth} & \textbf{Reference} & \textbf{Composed} & \textbf{Joint} & \textbf{Reference} & \textbf{Composed} & \textbf{Joint} \\ \hline
+Easy   & 12.9 & 13.4 & 14.5 & 0.90 & 0.79 & 1.11 \\ \hline
+Medium & 22.3 & 21.9 & 23.1 & 0.46 & 0.28 & 0.51 \\ \hline
+Hard   & 20.2 & 21.6 & 21.4 & 0.00 & 0.00 & 0.03 \\ \hline
+\end{tabular}
+\end{table}
+
+The composed model follows the same pattern as the references. Its easy answers use short sentences and explain terms often, while its medium and hard answers use much longer sentences, and its hard answers explain no terms at all. The joint adapters show the same pattern, so in this check composition did not lose any of the depth behaviour. Overall, the generated answers confirm what the loss showed: combining the two adapters keeps both the language and the depth behaviour.
+
+
+\subsubsection{Output Comparison}
+To show what the composed model actually writes, Tables~\ref{tab:comp-out-en}, \ref{tab:comp-out-urdish} and~\ref{tab:comp-out-ur} give an example from every one of the nine combinations. All examples are answers to the same World Bank news article about Pakistan's growth, fiscal deficit and poverty, so the only things that change between them are the requested language and depth. Each table shows one language at the three depths, with the reference explanation, the composed answer and the joint answer side by side. 
+
+\begin{table}[H]
+\centering
+\caption{English answers of the composed and joint adapters for the same article at the three depths. Long answers are shortened, marked with [\dots]}
+\label{tab:comp-out-en}
+\footnotesize
+\begin{tabular}{|p{0.08\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|}
+\hline
+\textbf{Depth} & \textbf{Reference} & \textbf{Composed} & \textbf{Joint} \\ \hline
+Easy & The World Bank is an international organization. It gives loans and financial advice to countries. On Tuesday, the World Bank predicted that Pakistan's economic growth will be 3.8 percent and its fiscal deficit will be 3.5 percent. A fiscal deficit means the government spends more [\dots] & The World Bank, an international financial institution, said on Tuesday that Pakistan's economic growth is 3.8 per cent in the current fiscal year. A fiscal year is the year in which the government's budget is made. The World Bank also said the fiscal deficit is [\dots] & The World Bank, an international body that lends money to countries, said on Tuesday that Pakistan's economic growth in the current financial year is 3.8 percent. It said the fiscal deficit is 3.5 percent. A fiscal deficit means the government's spending is more than its [\dots] \\ \hline
+Medium & The World Bank predicted on Tuesday that Pakistan's economic growth would be 3.8 percent and its fiscal deficit 3.5 percent. A fiscal deficit means the government spends more than it earns. According to the World Bank, almost half of the extremely poor people in Menaap—that [\dots] & The World Bank on Tuesday projected Pakistan's economic growth at 3.8 per cent and fiscal deficit at 3.5 per cent for the current fiscal year. The World Bank said Menaap is the only region in the world where poverty remains above pre-pandemic levels and continues [\dots] & The World Bank on Tuesday projected Pakistan's economic growth at 3.8 per cent and fiscal deficit at 3.5 per cent for the current fiscal year. It said Pakistan is home to almost half of the extremely poor population in the entire Middle East, North Africa [\dots] \\ \hline
+Hard & The World Bank on Tuesday projected Pakistan's economic growth at 3.8 per cent and its fiscal deficit at 3.5 per cent. According to the World Bank, Pakistan is home to almost half of the extremely poor people in the Middle East, North Africa and Afghanistan-Pakistan [\dots] & The World Bank on Tuesday projected Pakistan's economic growth at 3.8 per cent and fiscal deficit at 3.5pc for the current fiscal year. According to the World Bank, Pakistan is home to almost half of the extremely poor population in the entire Middle East, North [\dots] & The World Bank on Tuesday projected Pakistan's economic growth at 3.8 per cent and fiscal deficit at 3.5 per cent for the current fiscal year. According to the World Bank, Pakistan is home to almost half of the extremely poor population in the entire Middle [\dots] \\ \hline
+\end{tabular}
+\end{table}
+
+In English, the composed and joint answers are very similar to each other and to the reference. At the easy depth, both explain terms such as fiscal year and fiscal deficit in short sentences. At the medium and hard depths, both drop these explanations and report the facts in longer sentences with terms like ``pre-pandemic levels''.
+
+\begin{table}[H]
+\centering
+\caption{Urdish answers of the composed and joint adapters for the same article at the three depths. Long answers are shortened, marked with [\dots]}
+\label{tab:comp-out-urdish}
+\footnotesize
+\begin{tabular}{|p{0.08\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|}
+\hline
+\textbf{Depth} & \textbf{Reference} & \textbf{Composed} & \textbf{Joint} \\ \hline
+Easy & World Bank ek international organization hai. Yeh mulkon ko loan aur financial advice deta hai. World Bank ne Tuesday ko predict kiya ke Pakistan ki economic growth 3.8 percent aur fiscal deficit 3.5 percent rahega. Fiscal deficit ka matlab hai government ka kharcha uski income [\dots] & World Bank ne Tuesday ko current fiscal year ke liye Pakistan ki economic growth 3.8 percent batayi. Fiscal year ka matlab hai woh saal jo government ke budget ke liye chala hota hai. Fiscal deficit ka matlab hai government ka budget se zyada kharch. World [\dots] & World Bank ne Tuesday ko kaha ke Pakistan ke economic growth is saal 3.8 percent hain. Economic growth ka matlab hai economy mein barhne ki rate. Fiscal deficit ka matlab hai government ki income kam ho aur expenses zyada ho. World Bank ne is saal [\dots] \\ \hline
+Medium & World Bank ne Tuesday ko prediction ki ke Pakistan ki economic growth 3.8 percent aur fiscal deficit 3.5 percent rahega. Fiscal deficit ka matlab hai government ke kharche uski income se zyada hona. World Bank ke mutabiq Menaap, yani Middle East, North Africa aur Afghanistan-Pakistan [\dots] & World Bank ne current fiscal year ke liye Pakistan ki economic growth 3.8 percent aur fiscal deficit, yani government ki expenses aur income ke gap, 3.5 percent bataya hai. World Bank ke mutabiq Menaap region mein taqreeban aadhi tarah extremely poor population Pakistan mein rehti [\dots] & World Bank ne Tuesday ko current fiscal year ke liye Pakistan ki economic growth 3.8 percent aur fiscal deficit 3.5 percent bataya. Fiscal deficit ka matlab hai government ki income aur expenses ke farq ka paimana, yaani government ki expenses income se zyada hain. World [\dots] \\ \hline
+Hard & World Bank ne Tuesday ko Pakistan ki economic growth 3.8 per cent aur fiscal deficit 3.5 per cent rehne ki projection ki. World Bank ke mutabiq Pakistan mein Middle East, North Africa aur Afghanistan-Pakistan (Menaap) region ke taqreeban aadhe extremely poor log rehte hain, aur [\dots] & World Bank ne current fiscal year ke liye Pakistan ki economic growth 3.8 per cent aur fiscal deficit 3.5pc bataya hai. World Bank ke mutabiq Menaap region mein taqreeban aadhi tarah extremely poor population Pakistan mein rehti hai, aur yeh region wohi hai jahan poverty [\dots] & World Bank ne Tuesday ko current fiscal year ke liye Pakistan ki economic growth 3.8 per cent aur fiscal deficit 3.5pc batayi. World Bank ke mutabiq Middle East, North Africa aur Afghanistan-Pakistan (Menaap) region mein taqreeban aadhe extremely poor log Pakistan mein rehte hain. Washington-based [\dots] \\ \hline
+\end{tabular}
+\end{table}
+
+The Urdish answers show the same pattern. At the easy depth, both the composed and the joint answers explain fiscal year, fiscal deficit and Menaap with ``ka matlab hai'', just like the reference. At the medium depth, the composed answer gives a short explanation inside the sentence, and at the hard depth it gives none. Both models write natural Roman Urdu, although the composed answers use the awkward phrase ``aadhi tarah''.
+
+\begin{table}[H]
+\centering
+\caption{Urdu answers of the composed and joint adapters for the same article at the three depths. Long answers are shortened, marked with [\dots]}
+\label{tab:comp-out-ur}
+\footnotesize
+\begin{tabular}{|p{0.08\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|p{0.26\textwidth}|}
+\hline
+\textbf{Depth} & \textbf{Reference} & \textbf{Composed} & \textbf{Joint} \\ \hline
+Easy & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_easy_reference.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_easy_composed.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_easy_joint.png}} \\ \hline
+Medium & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_med_reference.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_med_composed.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_med_joint.png}} \\ \hline
+Hard & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_hard_reference.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_hard_composed.png}} & \raisebox{-0.95\height}{\includegraphics[width=\linewidth]{Figures/comp_ur_hard_joint.png}} \\ \hline
+\end{tabular}
+\end{table}
+
+In Urdu, both models also follow the depth, they explain terms at the easy depth and write denser text at the hard depth. But both make some word mistakes that change the meaning. The composed adapters at medium and hard depths interchanged some terms and the joint easy answer even added a wrong fact that the fiscal year runs from 1 March to 28 February. Since both approaches make such mistakes, it shows that Urdu vocabulary is a general weakness of the adapters and not something caused by composition.
+
+
+\subsubsection{Training Cost}
+Table~\ref{tab:comp-cost} compares the cost of training the two sets of adapters. Both sets were trained on the same GPU with the same model and settings.
+
+\begin{table}[H]
+\centering
+\caption{Training cost of the separate adapters used for composition and of the joint adapters}
+\label{tab:comp-cost}
+\small
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{Separate (composition)} & \textbf{Joint} \\ \hline
+Number of adapters & 6 & 9 \\ \hline
+Training rows per adapter & 1,398 & 466 \\ \hline
+Training examples processed (all adapters) & about 11,200 & about 8,400 \\ \hline
+Training time (all adapters) & 37.1 h & about 28 h \\ \hline
+Time per 1,000 examples & about 3.3 h & about 3.3 h \\ \hline
+Storage (all adapters) & about 0.95 GB & about 1.4 GB \\ \hline
+\end{tabular}
+\end{table}
+
+The separate adapters took longer to train but that is because of their almost triple sized training data as compared to jointly trained ones. When the time is measured per training example both approaches cost exactly the same, about 3.3 hours per 1,000 examples. As discussed above, even a single separate adapter reached a lower test loss than the joint adapters because it learned from more data. Adapters with the same amount of data also sometimes took quite different times, so the times in the table are approximate.
+
+The main saving of composition is in the number of adapters rather than in training time. Six adapters need about 1/3rd less storage than nine, and the gap grows with every new option. With $L$ languages and $D$ depths, composition needs $L + D$ adapters while joint training needs $L \times D$. So adding a fourth language, would mean training one new adapter for composition but three new adapters for joint training, and every adapter must also be stored, loaded and maintained.
+
+\subsection{Discussion}
+The results show that composing a language adapter and a depth adapter works as well as joint training, and in our case even slightly better. With both weights set to 0.5, the composed adapters had a lower test loss than the joint adapters in all nine combinations, and their answers still followed the requested language and depth. The total training time for composition was higher because every explanation is used by two adapters, but the cost per training example was the same. The real benefit is the number of adapters, composition needs only six adapters instead of nine.
+
+The main reason composition did better is most likely the amount of data. Each separate adapter is trained on three times more rows than a joint adapter, so it learns things that are common across combinations, which the joint adapters trained on only 466 rows each could not. However, composition does not work on its own, adding both adapters at full strength made the model worse than using a single adapter, so the weights had to be tuned on validation data.
+
+This comparison also has some limitations. It is mainly based on test loss, which shows how close the model is to the reference but not directly how good the answers are, and the generated answers were only checked on a few articles with a short output limit. Since the joint adapters had a third of the data of the separate adapters, the comparison mixes two effects, the way adapters are combined and the amount of data each one sees. Also, the Urdu and Urdish joint adapters were still improving when training ended, so more training might have closed some of the gap. Lastly, the weights were searched on a small grid, and all adapters were trained only once, so very small differences, like the 0.01 gap for Urdu, may not be meaningful.
+
+\section{Conclusion}
+This chapter presented the experiments carried out for DiploMind, from choosing the base model to training the adapters and testing whether they can be combined. In the base model comparison, Llama 3.1 8B Instruct was the only candidate that followed the Urdish instruction every time, while also staying close to the best in Urdu and keeping most of the source numbers, so it was chosen as the base for all adapters. After training, every one of the six adapters lowered the test loss of the base model on unseen articles by 33--45\%. The adapters also fixed the main weakness of the base model, the language of the answer now follows the instruction instead of the article with all three language adapters answering in the correct language and script every time. The depth adapters followed the same pattern as the reference explanations, explaining terms often at the easy depth and almost never at the hard depth.
+
+The composition experiment showed that combining one language adapter and one depth adapter works as well as training a separate adapter for every combination, and in our case slightly better with a lower test loss in all nine combinations. This only works with the right weights though and a single setting of 0.5 for both adapters worked for almost every combination. Composition did not save training time, as each separate adapter is trained on more data, but it needs fewer adapters, six instead of nine and this gap grows as more languages or depths are added. The main limitations of these experiments are that most measures are automatic, the generated answers were checked on a small number of articles and the adapters still make some word mistakes in Urdu. Overall, the results support the main idea behind DiploMind that a small set of adapters can be combined at inference time and can produce explanations in different languages and depths from a single base model.
 
 \begin{comment}
 \chapter{Conclusions}
