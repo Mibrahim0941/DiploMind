@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "registers": {
+    "en": "English",
+    "ur": "اردو",
+    "urdish": "Roman Urdu"
+  },
+  "prompt": {
+    "en": "Which of these is easiest for you to read?",
+    "ur": "ان میں سے کون سا آپ کے لیے پڑھنا سب سے آسان ہے؟",
+    "urdish": "In mein se kaun sa aap ke liye parhna sab se aasaan hai?"
+  },
+  "items": [
+    {
+      "id": "REG-01",
+      "texts": {
+        "en": "Health workers go door to door several times a year in Pakistan to give polio drops to children under five, but some families still refuse.",
+        "ur": "پاکستان میں ہیلتھ ورکرز سال میں کئی بار گھر گھر جا کر پانچ سال سے کم عمر بچوں کو پولیو کے قطرے پلاتے ہیں، لیکن کچھ خاندان اب بھی انکار کر دیتے ہیں۔",
+        "urdish": "Pakistan mein health workers saal mein kai baar ghar ghar ja kar paanch saal se kam age ke bachon ko polio drops pilate hain, lekin kuch families ab bhi inkaar kar dete hain."
+      }
+    },
+    {
+      "id": "REG-02",
+      "texts": {
+        "en": "During the monsoon, heavy rain often floods the streets of Karachi, leaving traffic stuck for hours and many areas without electricity.",
+        "ur": "مون سون کے دوران تیز بارش سے اکثر کراچی کی سڑکوں پر پانی بھر جاتا ہے، ٹریفک گھنٹوں پھنسی رہتی ہے اور کئی علاقوں میں بجلی چلی جاتی ہے۔",
+        "urdish": "Monsoon ke dauran tez baarish se aksar Karachi ki streets par paani bhar jata hai, traffic ghanton block rehti hai aur kai areas mein bijli chali jati hai."
+      }
+    },
+    {
+      "id": "REG-03",
+      "texts": {
+        "en": "Every winter, thick smog in Lahore forces schools to close for days, and doctors advise people to wear masks and stay indoors.",
+        "ur": "ہر سردی میں لاہور میں گھنی اسموگ کی وجہ سے اسکول کئی دنوں کے لیے بند کرنے پڑتے ہیں، اور ڈاکٹر لوگوں کو ماسک پہننے اور گھر کے اندر رہنے کا مشورہ دیتے ہیں۔",
+        "urdish": "Har sardi mein Lahore mein thick smog ki wajah se school kai dinon ke liye close karne parte hain, aur doctor logon ko mask pehnne aur ghar ke andar rehne ki advice dete hain."
+      }
+    }
+  ]
+}

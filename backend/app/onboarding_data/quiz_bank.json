@@ -1,0 +1,2022 @@
+{
+  "version": "v9",
+  "calibrated_on": "2026-11-17",
+  "pilot_participants": {
+    "easy": 28,
+    "medium": 9,
+    "technical": 5
+  },
+  "levels": [
+    "easy",
+    "medium",
+    "technical"
+  ],
+  "items": [
+    {
+      "id": "IRN-01",
+      "ladder": "L01",
+      "ladder_title": "The Iran war and Pakistan as mediator",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In 2026, Iran declared which waterway closed during its war with the US and Israel?",
+          "options": [
+            "The Strait of Hormuz",
+            "The Strait of Malacca",
+            "The Bosphorus",
+            "The Suez Canal"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.725,
+        "medium": 0.95,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -1.071
+    },
+    {
+      "id": "IRN-02",
+      "ladder": "L01",
+      "ladder_title": "The Iran war and Pakistan as mediator",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In April 2026, US Vice President JD Vance held direct talks with Iran in which city?",
+          "options": [
+            "Doha",
+            "Geneva",
+            "Islamabad",
+            "Muscat"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.568,
+        "medium": 0.836,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -0.25
+    },
+    {
+      "id": "IRN-03",
+      "ladder": "L01",
+      "ladder_title": "The Iran war and Pakistan as mediator",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan carried proposals between the US and Iran and helped them agree a ceasefire, but could not impose a deal on either side. What is this role called?",
+          "options": [
+            "Appeasement",
+            "Mediation",
+            "Adjudication",
+            "Arbitration"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.056,
+        "medium": 0.472,
+        "technical": 0.815
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.699
+    },
+    {
+      "id": "ECON-12",
+      "ladder": "L02",
+      "ladder_title": "Petrol, prices and Pakistan's economy",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Petrol and diesel prices in Pakistan jumped by Rs55 a litre in March 2026. What was the main reason?",
+          "options": [
+            "The IMF set a new petrol price for Pakistan",
+            "Saudi Arabia stopped selling oil to Pakistan",
+            "Pakistan's main refineries shut down for repairs",
+            "War in the Middle East pushed up world oil prices"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.553,
+        "medium": 0.898,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -0.297
+    },
+    {
+      "id": "ECON-09",
+      "ladder": "L02",
+      "ladder_title": "Petrol, prices and Pakistan's economy",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Headline: \"Pakistan's foreign exchange reserves fall sharply.\" Why does this worry the government?",
+          "options": [
+            "It may be unable to pay for imports and debts",
+            "The State Bank must stop printing rupees",
+            "Taxes collected inside Pakistan will fall",
+            "Remittances from abroad will be blocked"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.401,
+        "medium": 0.617,
+        "technical": 0.884
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.3,
+        "medium": 0.6,
+        "technical": 0.8
+      },
+      "difficulty": 0.595
+    },
+    {
+      "id": "ECON-05",
+      "ladder": "L02",
+      "ladder_title": "Petrol, prices and Pakistan's economy",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "\"Pakistan secured a rollover of deposits from friendly countries to shore up its foreign reserves.\" What does \"rollover\" mean here?",
+          "options": [
+            "Lenders agreed to push back the repayment date",
+            "The deposits were turned into grants, not loans",
+            "Pakistan paid the deposits back ahead of time",
+            "The deposits were moved to the IMF's account"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.408,
+        "technical": 0.811
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.977
+    },
+    {
+      "id": "GAZ-01",
+      "ladder": "L03",
+      "ladder_title": "Gaza and Palestine",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Which group controlled Gaza before the October 2025 ceasefire?",
+          "options": [
+            "The Houthis",
+            "Hamas",
+            "Fatah",
+            "Hezbollah"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.698,
+        "medium": 0.922,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -0.819
+    },
+    {
+      "id": "GLOB-05",
+      "ladder": "L03",
+      "ladder_title": "Gaza and Palestine",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "What does the \"two-state solution\" refer to?",
+          "options": [
+            "Reunifying North and South Korea",
+            "Splitting Sudan into two countries",
+            "Dividing Kashmir between Pakistan and India",
+            "An independent Palestinian state alongside Israel"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.603,
+        "medium": 0.892,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -0.444
+    },
+    {
+      "id": "GLOB-11",
+      "ladder": "L03",
+      "ladder_title": "Gaza and Palestine",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "What were the Abraham Accords (2020)?",
+          "options": [
+            "A defence pact among Gulf states aimed at Iran",
+            "A US-brokered ceasefire between Israel and Hamas",
+            "Arab states agreeing to normal ties with Israel",
+            "A UN plan to create an independent Palestinian state"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.186,
+        "medium": 0.335,
+        "technical": 0.674
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.74
+    },
+    {
+      "id": "PFR-22",
+      "ladder": "L04",
+      "ladder_title": "India",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan hosted the 2025 Champions Trophy, but India played its matches in Dubai. What was the main reason?",
+          "options": [
+            "Pakistan's new stadiums were not finished in time",
+            "Dubai offered the teams much higher prize money",
+            "India's government didn't let its team go to Pakistan",
+            "The ICC moved the matches because of extreme heat"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.95,
+        "medium": 0.95,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -2.533
+    },
+    {
+      "id": "PFR-18",
+      "ladder": "L04",
+      "ladder_title": "India",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In 2025, India said it was holding which agreement with Pakistan \"in abeyance\"?",
+          "options": [
+            "The Tashkent Declaration",
+            "The Indus Waters Treaty",
+            "The Liaquat-Nehru Pact",
+            "The Lahore Declaration"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.165,
+        "medium": 0.505,
+        "technical": 0.859
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 1.357
+    },
+    {
+      "id": "PFR-13",
+      "ladder": "L04",
+      "ladder_title": "India",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Which institution brokered the Indus Waters Treaty in 1960 and has a role in its dispute process?",
+          "options": [
+            "SAARC",
+            "The World Bank",
+            "The International Court of Justice",
+            "The UN Security Council"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.24,
+        "medium": 0.43,
+        "technical": 0.831
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.2,
+        "medium": 0.5,
+        "technical": 0.8
+      },
+      "difficulty": 1.39
+    },
+    {
+      "id": "KSH-02",
+      "ladder": "L05",
+      "ladder_title": "Kashmir",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "India and Pakistan fought a short conflict in May 2025. What set it off?",
+          "options": [
+            "A border clash in Sindh's Rann of Kutch",
+            "A dispute over the Kartarpur Corridor",
+            "A row over the Champions Trophy",
+            "An attack that killed tourists in Pahalgam"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.64,
+        "medium": 0.922,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -0.614
+    },
+    {
+      "id": "SEC-11",
+      "ladder": "L05",
+      "ladder_title": "Kashmir",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In August 2019, India changed the status of Indian-administered Kashmir. What did that move do?",
+          "options": [
+            "Ended its special autonomous status",
+            "Made the Line of Control the official border",
+            "Agreed to a UN-supervised plebiscite",
+            "Handed part of Ladakh to China"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.194,
+        "medium": 0.533,
+        "technical": 0.896
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.215
+    },
+    {
+      "id": "GLOB-08",
+      "ladder": "L05",
+      "ladder_title": "Kashmir",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Why does Pakistan usually emphasise the UN Security Council resolutions on Kashmir, while India emphasises the Simla Agreement?",
+          "options": [
+            "Both documents call for Kashmir to become an independent state",
+            "Simla referred the dispute to the ICJ; the resolutions did not",
+            "The resolutions favour India's position; Simla favours Pakistan's position",
+            "The resolutions support a plebiscite; Simla commits both sides to bilateral talks"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.278,
+        "medium": 0.585,
+        "technical": 0.921
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 0.89
+    },
+    {
+      "id": "POL-05",
+      "ladder": "L06",
+      "ladder_title": "Domestic politics",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In May 2025, Pakistan's army chief Asim Munir was promoted to which rank, held before only by Ayub Khan?",
+          "options": [
+            "Marshal of the Air Force",
+            "Supreme Commander",
+            "Field Marshal",
+            "General of the Army"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.507,
+        "medium": 0.856,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -0.1
+    },
+    {
+      "id": "POL-04",
+      "ladder": "L06",
+      "ladder_title": "Domestic politics",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "What happens if a no-confidence motion against the Prime Minister passes in the National Assembly?",
+          "options": [
+            "The Prime Minister is removed from office",
+            "Fresh general elections are held automatically",
+            "The Senate must approve it before it takes effect",
+            "The President takes over the government"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.389,
+        "medium": 0.76,
+        "technical": 0.774
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 0.567
+    },
+    {
+      "id": "POL-03",
+      "ladder": "L06",
+      "ladder_title": "Domestic politics",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Headline: \"Centre and provinces fail to agree on the next NFC Award.\" What does the NFC Award decide?",
+          "options": [
+            "How National Assembly seats are divided among the provinces",
+            "How federal tax revenue is shared between the centre and provinces",
+            "How much Pakistan repays the IMF each year",
+            "How Indus river water is shared among the provinces"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.114,
+        "medium": 0.535,
+        "technical": 0.674
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.74
+    },
+    {
+      "id": "IO-02",
+      "ladder": "L07",
+      "ladder_title": "IMF and loans",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "What is the IMF?",
+          "options": [
+            "A UN court that settles financial disputes between countries",
+            "An international lender that helps countries facing payment crises",
+            "The World Bank's special fund for building dams and roads",
+            "A bank owned and run by the United States government"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.912,
+        "medium": 0.912,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -1.646
+    },
+    {
+      "id": "ECON-11",
+      "ladder": "L07",
+      "ladder_title": "IMF and loans",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "The IMF has pressed Pakistan to end fuel subsidies, even when oil prices rise. Why does the IMF usually ask for this?",
+          "options": [
+            "To raise the profits of oil companies",
+            "To bring petrol prices down for consumers",
+            "To cut Pakistan's oil imports from the Gulf",
+            "To cut government spending and the budget deficit"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.301,
+        "medium": 0.666,
+        "technical": 0.919
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 0.723
+    },
+    {
+      "id": "IO-10",
+      "ladder": "L07",
+      "ladder_title": "IMF and loans",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "\"The IMF will release the next tranche once Pakistan meets its structural benchmarks.\" What is a structural benchmark?",
+          "options": [
+            "The interest rate charged on the IMF loan",
+            "A minimum level of foreign reserves the IMF guarantees",
+            "A ranking of Pakistan's economy against other countries",
+            "A reform step Pakistan agreed to complete"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.3,
+        "technical": 0.478
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.508
+    },
+    {
+      "id": "PFR-11",
+      "ladder": "L08",
+      "ladder_title": "Afghanistan and the TTP",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan often asks the Afghan Taliban government to act against the TTP. What is the TTP?",
+          "options": [
+            "An Afghan refugee organisation based in Pakistan",
+            "The Afghan Taliban government's own army",
+            "A Baloch separatist group fighting in Balochistan",
+            "A Pakistani militant group active inside Pakistan"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.174,
+        "technical": 0.74
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.454
+    },
+    {
+      "id": "CORE-03",
+      "ladder": "L08",
+      "ladder_title": "Afghanistan and the TTP",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Headline: \"Foreign Office summons Afghan envoy.\" What does this usually mean?",
+          "options": [
+            "The diplomat is invited for routine trade talks",
+            "Pakistan has cut diplomatic relations with Afghanistan",
+            "The diplomat is called in to receive a formal complaint",
+            "The diplomat is being expelled from the country"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.219,
+        "medium": 0.566,
+        "technical": 0.861
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.3,
+        "medium": 0.6,
+        "technical": 0.8
+      },
+      "difficulty": 1.155
+    },
+    {
+      "id": "PFR-17",
+      "ladder": "L08",
+      "ladder_title": "Afghanistan and the TTP",
+      "tier": "Front page",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan says its strikes inside Afghanistan target militants who attack Pakistan from there. Which right under the UN Charter is Pakistan usually invoking?",
+          "options": [
+            "The responsibility to protect",
+            "The right to self-determination",
+            "The right of self-defence",
+            "Collective security under Chapter VII"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.362,
+        "medium": 0.63,
+        "technical": 0.94
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 0.585
+    },
+    {
+      "id": "SEC-14",
+      "ladder": "L09",
+      "ladder_title": "Saudi Arabia, Turkiye and defence pacts",
+      "tier": "Front page",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "In August 2026, Pakistan signed a joint defence agreement in Makkah with which two countries?",
+          "options": [
+            "Saudi Arabia and Turkiye",
+            "Qatar and the UAE",
+            "Saudi Arabia and Iran",
+            "China and Turkiye"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.327,
+        "medium": 0.793,
+        "technical": 0.939
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 0.411
+    },
+    {
+      "id": "CORE-10",
+      "ladder": "L09",
+      "ladder_title": "Saudi Arabia, Turkiye and defence pacts",
+      "tier": "Front page",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Under that agreement, as under NATO's Article 5, an armed attack on one member is treated as an attack on all. Which principle is this?",
+          "options": [
+            "Balance of power",
+            "Collective defence",
+            "Non-intervention",
+            "Self-determination"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.355,
+        "medium": 0.916,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 0.09
+    },
+    {
+      "id": "SEC-09",
+      "ladder": "L10",
+      "ladder_title": "Nuclear weapons",
+      "tier": "Inside pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "The NPT is often in the news about Iran and North Korea. What is the NPT?",
+          "options": [
+            "An alliance of countries that have nuclear weapons",
+            "A treaty that aims to stop the spread of nuclear weapons",
+            "A treaty that bans all nuclear testing",
+            "A UN body that inspects nuclear power plants"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.204,
+        "medium": 0.622,
+        "technical": 0.721
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.304
+    },
+    {
+      "id": "SEC-05",
+      "ladder": "L10",
+      "ladder_title": "Nuclear weapons",
+      "tier": "Inside pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Which statement about India, Pakistan and the Nuclear Non-Proliferation Treaty (NPT) is correct?",
+          "options": [
+            "Neither country has signed it",
+            "Only India has signed it",
+            "Both signed it but later withdrew",
+            "Both signed it as nuclear-weapon states"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.224,
+        "medium": 0.697,
+        "technical": 0.919
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 0.919
+    },
+    {
+      "id": "SEC-04",
+      "ladder": "L10",
+      "ladder_title": "Nuclear weapons",
+      "tier": "Inside pages",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Headline: \"Pakistan reaffirms its policy of credible minimum deterrence.\" What is Pakistan signalling?",
+          "options": [
+            "It will use nuclear weapons only if attacked with them first",
+            "It keeps the smallest nuclear arsenal of any nuclear state",
+            "It keeps enough force to deter attack, not to win a numbers race",
+            "It will match India's nuclear arsenal weapon for weapon"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.099,
+        "medium": 0.241,
+        "technical": 0.604
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.254
+    },
+    {
+      "id": "PFR-19",
+      "ladder": "L11",
+      "ladder_title": "China, CPEC and Gwadar",
+      "tier": "Inside pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Gwadar port in Balochistan is being developed mainly with investment from which country?",
+          "options": [
+            "China",
+            "The United Arab Emirates",
+            "Saudi Arabia",
+            "The United States"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.692,
+        "medium": 0.854,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -0.627
+    },
+    {
+      "id": "PFR-14",
+      "ladder": "L11",
+      "ladder_title": "China, CPEC and Gwadar",
+      "tier": "Inside pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Headline: \"New CPEC projects announced for Gwadar.\" Why does Gwadar matter so much to China?",
+          "options": [
+            "It is China's main naval base in the Indian Ocean",
+            "It is the only warm-water port China can use",
+            "It holds large oil reserves China plans to extract",
+            "It gives China a shorter route that avoids Malacca"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.392,
+        "medium": 0.566,
+        "technical": 0.919
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 0.723
+    },
+    {
+      "id": "REF-01",
+      "ladder": "L12",
+      "ladder_title": "Afghan refugees",
+      "tier": "Inside pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Since 2023, Pakistan has sent hundreds of thousands of undocumented migrants back to which country?",
+          "options": [
+            "Myanmar",
+            "Iran",
+            "Afghanistan",
+            "Bangladesh"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.899,
+        "medium": 0.95,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -1.927
+    },
+    {
+      "id": "GLOB-03",
+      "ladder": "L12",
+      "ladder_title": "Afghan refugees",
+      "tier": "Inside pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan hosts millions of Afghan refugees. Which UN agency is mainly responsible for refugees?",
+          "options": [
+            "UNICEF",
+            "UNHCR",
+            "UNESCO",
+            "WHO"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.261,
+        "medium": 0.366,
+        "technical": 0.896
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.215
+    },
+    {
+      "id": "REF-03",
+      "ladder": "L12",
+      "ladder_title": "Afghan refugees",
+      "tier": "Inside pages",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan has never signed the 1951 UN Refugee Convention. What does this mean?",
+          "options": [
+            "The UN must pay all refugee costs in Pakistan",
+            "Refugees get Pakistani citizenship after ten years",
+            "It is not bound by the treaty's refugee rules",
+            "Refugees in Pakistan have no legal rights at all"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.194,
+        "medium": 0.533,
+        "technical": 0.896
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.215
+    },
+    {
+      "id": "PFR-02",
+      "ladder": "L13",
+      "ladder_title": "The SCO",
+      "tier": "Inside pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan, China, Russia, India and several Central Asian states are all members of which organisation?",
+          "options": [
+            "The Shanghai Cooperation Organisation (SCO)",
+            "SAARC",
+            "BRICS",
+            "The Economic Cooperation Organisation (ECO)"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.179,
+        "medium": 0.307,
+        "technical": 0.861
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.572
+    },
+    {
+      "id": "TH-03",
+      "ladder": "L13",
+      "ladder_title": "The SCO",
+      "tier": "Inside pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "An analyst writes: \"SCO membership lets Pakistan build trust with rivals and manage disputes through shared rules.\" Which IR theory does this reasoning reflect?",
+          "options": [
+            "Liberalism",
+            "Marxism",
+            "Realism",
+            "Constructivism"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.086,
+        "medium": 0.213,
+        "technical": 0.795
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.05,
+        "medium": 0.2,
+        "technical": 0.8
+      },
+      "difficulty": 2.114
+    },
+    {
+      "id": "IO-04",
+      "ladder": "L14",
+      "ladder_title": "The UN Security Council",
+      "tier": "Inside pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Which five countries are the permanent members of the UN Security Council?",
+          "options": [
+            "USA, UK, France, Russia and Saudi Arabia",
+            "USA, UK, France, Russia and China",
+            "USA, Russia, China, India and France",
+            "USA, UK, Germany, Japan and China"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.132,
+        "medium": 0.622,
+        "technical": 0.888
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.304
+    },
+    {
+      "id": "UN-02",
+      "ladder": "L14",
+      "ladder_title": "The UN Security Council",
+      "tier": "Inside pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Pakistan sits on the UN Security Council for 2025-26. What kind of seat does it hold?",
+          "options": [
+            "A permanent seat with a veto",
+            "An observer seat that cannot vote",
+            "A seat it holds as a nuclear power",
+            "An elected two-year seat without a veto"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.535,
+        "technical": 0.841
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 1.74
+    },
+    {
+      "id": "IO-08",
+      "ladder": "L14",
+      "ladder_title": "The UN Security Council",
+      "tier": "Inside pages",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "\"The draft resolution was adopted 13-0, with two permanent members abstaining.\" What happened?",
+          "options": [
+            "It was adopted",
+            "It needs a second vote",
+            "It failed due to the abstentions",
+            "It goes to the General Assembly"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.099,
+        "medium": 0.241,
+        "technical": 0.604
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.254
+    },
+    {
+      "id": "GLOB-01",
+      "ladder": "L15",
+      "ladder_title": "Climate change",
+      "tier": "Specialist pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "News reports often mention COP29, COP30 and so on. What is COP?",
+          "options": [
+            "The annual meeting of the IMF and World Bank",
+            "The yearly meeting of the world's 20 largest economies",
+            "The yearly UN conference on climate change",
+            "A UN conference on refugees and migration"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.3,
+        "technical": 0.478
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.508
+    },
+    {
+      "id": "GLOB-10",
+      "ladder": "L15",
+      "ladder_title": "Climate change",
+      "tier": "Specialist pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "After the 2022 floods, Pakistan pushed for a \"loss and damage\" fund at the UN climate talks. Who is mainly expected to pay into it?",
+          "options": [
+            "Every UN member equally, through fees",
+            "Countries hit hardest by climate disasters",
+            "Private insurance companies",
+            "Rich countries that have emitted the most"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.436,
+        "technical": 0.557
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 2.074
+    },
+    {
+      "id": "GLOB-06",
+      "ladder": "L15",
+      "ladder_title": "Climate change",
+      "tier": "Specialist pages",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Under the Paris Agreement, what are NDCs?",
+          "options": [
+            "Penalties for countries that miss their climate goals",
+            "Money rich countries pay to poorer countries for climate damage",
+            "Climate targets that each country sets for itself and updates over time",
+            "Emission limits that the UN sets for each country"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.381,
+        "technical": 0.505
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.05,
+        "medium": 0.3,
+        "technical": 0.5
+      },
+      "difficulty": 2.34
+    },
+    {
+      "id": "LAW-09",
+      "ladder": "L16",
+      "ladder_title": "How diplomacy works",
+      "tier": "Specialist pages",
+      "rung": 1,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "Who represents Pakistan at the United Nations in New York day to day?",
+          "options": [
+            "Pakistan's Foreign Minister",
+            "The UN Secretary-General",
+            "Pakistan's Permanent Representative to the UN",
+            "Pakistan's ambassador to the United States"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.135,
+        "medium": 0.526,
+        "technical": 0.689
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.2,
+        "medium": 0.5,
+        "technical": 0.7
+      },
+      "difficulty": 1.676
+    },
+    {
+      "id": "LAW-10",
+      "ladder": "L16",
+      "ladder_title": "How diplomacy works",
+      "tier": "Specialist pages",
+      "rung": 2,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "A foreign diplomat in Islamabad breaks a law. Why can Pakistan usually not put them on trial?",
+          "options": [
+            "Their embassy pays a fixed fine instead",
+            "They have diplomatic immunity",
+            "Pakistan's courts cannot try foreigners",
+            "Only the UN can put diplomats on trial"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.204,
+        "medium": 0.422,
+        "technical": 0.888
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.304
+    },
+    {
+      "id": "LAW-05",
+      "ladder": "L16",
+      "ladder_title": "How diplomacy works",
+      "tier": "Specialist pages",
+      "rung": 3,
+      "standalone_separates": null,
+      "texts": {
+        "en": {
+          "stem": "\"The diplomat was declared persona non grata.\" What does this mean?",
+          "options": [
+            "The host country has ordered the diplomat to leave",
+            "The two countries have cut diplomatic relations",
+            "The diplomat has lost immunity and can now be arrested",
+            "The diplomat's own country has recalled them for consultations"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.05,
+        "medium": 0.203,
+        "technical": 0.683
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.05,
+        "medium": 0.2,
+        "technical": 0.6
+      },
+      "difficulty": 2.47
+    },
+    {
+      "id": "GENZ-01",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "easy vs medium",
+      "texts": {
+        "en": {
+          "stem": "In 2026, young protesters in India began calling themselves 'cockroaches'. What first set off their protests?",
+          "options": [
+            "Leaked and cancelled national exam papers",
+            "A government ban on TikTok",
+            "A sharp rise in petrol prices",
+            "A new compulsory military service law"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.816,
+        "medium": 0.869,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -1.071
+    },
+    {
+      "id": "GENZ-02",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "easy vs medium",
+      "texts": {
+        "en": {
+          "stem": "In September 2025, Gen Z protests in Nepal, sparked by a social media ban, led to what?",
+          "options": [
+            "Parliament banned all political parties",
+            "The Prime Minister resigned",
+            "The army took over the government",
+            "Nepal's monarchy was restored"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.64,
+        "medium": 0.922,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": -0.614
+    },
+    {
+      "id": "GENZ-03",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "all three",
+      "texts": {
+        "en": {
+          "stem": "Bangladesh's 2024 student protests, which ended Sheikh Hasina's rule, began over what?",
+          "options": [
+            "A rise in electricity prices",
+            "The jailing of opposition leaders",
+            "Quotas for government jobs",
+            "Delays to the national election"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.507,
+        "medium": 0.856,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": -0.1
+    },
+    {
+      "id": "PFR-16",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "easy vs medium",
+      "texts": {
+        "en": {
+          "stem": "SAARC has not held a leaders' summit since 2014. What is the main reason usually given?",
+          "options": [
+            "Member countries stopped paying for it",
+            "China blocked SAARC from meeting",
+            "Afghanistan withdrew from the group",
+            "Tensions between India and Pakistan"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.212,
+        "medium": 0.538,
+        "technical": 0.749
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.5,
+        "medium": 0.7,
+        "technical": 0.8
+      },
+      "difficulty": 1.366
+    },
+    {
+      "id": "PFR-21",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "easy vs medium",
+      "texts": {
+        "en": {
+          "stem": "In 2025, Pakistan's government recommended which world leader for the Nobel Peace Prize?",
+          "options": [
+            "Donald Trump",
+            "Xi Jinping",
+            "Recep Tayyip Erdogan",
+            "Mohammed bin Salman"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 0,
+      "p": {
+        "easy": 0.533,
+        "medium": 0.703,
+        "technical": 0.95
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 0.001
+    },
+    {
+      "id": "GAZ-02",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "all three",
+      "texts": {
+        "en": {
+          "stem": "Pakistan said it could join the international force for Gaza, but not if its mandate included one task. Which?",
+          "options": [
+            "Rebuilding hospitals and schools",
+            "Disarming armed groups in Gaza",
+            "Guarding aid convoys",
+            "Training Palestinian police"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 1,
+      "p": {
+        "easy": 0.113,
+        "medium": 0.64,
+        "technical": 0.694
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": true,
+      "teacher_p": null,
+      "difficulty": 1.572
+    },
+    {
+      "id": "GLOB-09",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "all three",
+      "texts": {
+        "en": {
+          "stem": "Headline: \"G7 leaders meet to discuss the global economy.\" What is the G7?",
+          "options": [
+            "The seven biggest oil-exporting countries",
+            "The UN's seven largest donor agencies",
+            "The seven countries with nuclear weapons",
+            "A group of seven large, wealthy democracies"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.063,
+        "medium": 0.397,
+        "technical": 0.795
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.1,
+        "medium": 0.5,
+        "technical": 0.8
+      },
+      "difficulty": 1.862
+    },
+    {
+      "id": "CORE-06",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "all three",
+      "texts": {
+        "en": {
+          "stem": "\"Soft power\" is a country's ability to:",
+          "options": [
+            "Pressure others through economic sanctions and trade limits",
+            "Win wars quickly using small, highly trained forces",
+            "Damage rivals' systems through cyber attacks and hacking",
+            "Influence others through the appeal of its culture and values"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.194,
+        "medium": 0.533,
+        "technical": 0.896
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.215
+    },
+    {
+      "id": "PFR-03",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "medium vs technical",
+      "texts": {
+        "en": {
+          "stem": "Headline: \"Pakistan removed from the FATF grey list.\" Which countries are put on the grey list?",
+          "options": [
+            "Countries with poor human-rights records",
+            "Countries suspected of exporting nuclear technology",
+            "Countries with weak anti-money-laundering controls",
+            "Countries with dangerously high government debt"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.146,
+        "medium": 0.282,
+        "technical": 0.616
+      },
+      "pilot_n": {
+        "easy": 10,
+        "medium": 1,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": {
+        "easy": 0.05,
+        "medium": 0.3,
+        "technical": 0.6
+      },
+      "difficulty": 2.104
+    },
+    {
+      "id": "TH-02",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "medium vs technical",
+      "texts": {
+        "en": {
+          "stem": "What does the \"security dilemma\" describe?",
+          "options": [
+            "A state must choose between two allies that are rivals of each other",
+            "A state must trade off national security against human rights",
+            "One state's arms build-up makes others feel less safe, fuelling an arms race",
+            "A state must decide whether to join a military alliance"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 2,
+      "p": {
+        "easy": 0.147,
+        "medium": 0.372,
+        "technical": 0.815
+      },
+      "pilot_n": {
+        "easy": 7,
+        "medium": 6,
+        "technical": 1
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.699
+    },
+    {
+      "id": "TH-04",
+      "ladder": null,
+      "ladder_title": null,
+      "tier": "Standalone",
+      "rung": null,
+      "standalone_separates": "medium vs technical",
+      "texts": {
+        "en": {
+          "stem": "In IR theory, what does \"anarchy\" mean?",
+          "options": [
+            "The collapse of government inside a single country",
+            "Constant chaos and fighting between all states",
+            "Rule by militias and armed groups instead of governments",
+            "There is no world government above states to enforce rules"
+          ]
+        },
+        "ur": null,
+        "urdish": null
+      },
+      "correct": 3,
+      "p": {
+        "easy": 0.194,
+        "medium": 0.533,
+        "technical": 0.896
+      },
+      "pilot_n": {
+        "easy": 11,
+        "medium": 2,
+        "technical": 2
+      },
+      "news_rung": false,
+      "teacher_p": null,
+      "difficulty": 1.215
+    }
+  ],
+  "level_ability": {
+    "easy": 0.0,
+    "medium": 1.412,
+    "technical": 2.902
+  },
+  "method": "Rasch-style model on all questions + each question's own pilot answers and faculty estimate (faculty = 4 people, model = 4 people). Levels: IR/PS students = technical; others >= 50% correct = medium, else easy."
+}

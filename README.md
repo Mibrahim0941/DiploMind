@@ -1,92 +1,117 @@
 # DiploMind
 
-**Adaptive AI-powered International Relations literacy platform for multilingual Pakistani users.**
+Adaptive AI-powered International Relations literacy platform for Pakistani learners (FYP F26-172).
 
-DiploMind personalizes both the **language** (English / Urdu / Roman Urdu) and the **explanation depth** of IR and current-affairs content for each reader, using a continuously updated knowledge base and a feedback loop grounded in actual comprehension.
-
-> FAST-NUCES Lahore, Department of Computer Science. Advisor: Dr. Hajra Waheed.
-> Team: Muhammad Ibrahim, Bisma Amir, Maryum Nauman.
-> Status: 🚧 work in progress
+- **Backend:** FastAPI (Python), runs in Docker
+- **Database:** MongoDB, runs in Docker
+- **Frontend:** React + Vite + Tailwind, runs with `npm run dev`
 
 ---
 
-## Why DiploMind?
+## Folder structure
 
-IR content for Pakistani readers is mostly English-first and written at one fixed level:
+```
+DiploMind/
+├─ docker-compose.yml      Starts MongoDB + backend containers
+├─ .env.example            Template for .env (copy it, never commit .env)
+├─ .gitignore              Files Git should ignore (.env, node_modules, ...)
+│
+├─ backend/                FastAPI server
+│  ├─ Dockerfile           How the backend container is built
+│  ├─ requirements.txt     Python packages for the backend
+│  └─ app/
+│     ├─ main.py           Creates the app, registers routers, /api/health
+│     ├─ db.py             MongoDB connection, collections and indexes
+│     └─ auth.py           Signup, login, /me, and current_user (login check)
+│
+├─ frontend/               React app (the UI screens)
+│  ├─ vite.config.ts       Dev server; sends /api requests to the backend
+│  ├─ package.json         Frontend packages
+│  └─ src/
+│     ├─ App.tsx           Routes: which URL shows which page
+│     ├─ api.ts            All calls from the UI to the backend
+│     ├─ components/       Shared pieces (e.g. Header)
+│     └─ pages/            One file per screen (Login, Signup, Onboarding, Chat...)
+│
+└─ data_scrapper/          Scrapers that build the article knowledge base
+```
 
-- **News** moves fast and assumes background knowledge.
-- **Think-tank / academic writing** is dense, English-only, and written for specialists.
+## Databases (inside the one MongoDB container)
 
-Readers who prefer Urdu or Roman Urdu, or who need more (or less) context, are poorly served. Most personalization systems also lock a user profile at onboarding and tune one preference at a time. DiploMind instead:
+| Database    | Collection | What's in it                        | Written by          |
+|-------------|------------|-------------------------------------|---------------------|
+| `diplomind` | `users`    | Accounts and profile (register, depth, onboarding) | backend (`auth.py`) |
+| `irlit`     | `articles` | Scraped articles                    | `data_scrapper/`    |
 
-1. Keeps its knowledge base **current**.
-2. Personalizes **language and depth independently**.
-3. Keeps **updating each reader's profile** as evidence builds up.
+View them in MongoDB Compass at `mongodb://localhost:27017`.
 
----
-
-## Architecture
-
-The system has four parts:
-
-| Component | What it does |
-|---|---|
-| **Offline data pipeline** | IR data scraper → clean & preprocess → dataset builder. Outputs the knowledge base, fine-tuning pairs, and a diagnostic quiz bank. |
-| **Cold start (per new user)** | Diagnostic quiz → clustering → stored user profile. |
-| **Online serving (per request)** | User query → document retrieval → personalization router (LinUCB bandit) → LLM + LoRA adapters (ΔW = language + depth) → adapted response. |
-| **Feedback + retrain loop** | Post-explanation quiz → reward calculator → reward log. *Fast loop:* bandit weight updates. *Slow loop:* batched P-GRPO retraining of per-cluster LoRA adapters. A reassignment monitor updates the user profile on drift. |
-
----
-
-## Project Targets
-
-- [ ] **Dataset foundation:** continuously source current-affairs and foundational IR content (Pakistani and international; English and Urdu) and build language- and depth-adapted training data for adapter fine-tuning.
-- [ ] **Cold-start onboarding:** a diagnostic quiz that sets a reasonable initial personalization profile before interaction history exists.
-- [ ] **Personalized delivery and adaptive routing:** adapt language and depth independently at serving time, refining preferences from ongoing quiz feedback instead of relying only on the initial profile.
-- [ ] **Drift detection:** a reward-based mechanism that detects when a reader's preferences have diverged from their profile cluster and reassigns them.
-
-**Open research question:** can language and depth adapters be composed independently in an axis-specific setting like this one?
-
----
-
-## Work Done So Far
-
-- [x] Literature review (contextual bandits, parameter-efficient adaptation, learner personalization)
-- [x] System architecture finalized
-- [x] Data scraping pipeline started
-- [x] Initial knowledge base populated with current-affairs and foundational IR content from local and international sources
-- [ ] Adapter training dataset (**next**)
-- [ ] Retrieval layer (**next**)
-- [ ] Diagnostic quiz bank and cold-start clustering
-- [ ] LoRA adapters (language + depth)
-- [ ] LinUCB personalization router
-- [ ] Feedback loop (reward calculator, bandit updates, P-GRPO retraining)
-- [ ] Reassignment monitor (drift detection)
-- [ ] End-to-end evaluation and demo
+**Note:** each laptop has its own database. GitHub shares the code, not the data.
 
 ---
 
-## Tech Stack
+## First-time setup (each team member)
 
-Python, PyTorch, Hugging Face (Transformers, PEFT), FastAPI.
+1. Install Docker Desktop, Git, Node.js LTS (and optionally MongoDB Compass).
+2. In PowerShell (once): `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+3. Clone the repo, then in the `DiploMind` folder:
+   ```powershell
+   Copy-Item .env.example .env      # then put a long random string in JWT_SECRET
+   docker compose up --build -d
+   cd frontend
+   npm install
+   npm run dev
+   ```
+4. Open http://localhost:5173/signup
+
+## Daily routine
+
+```powershell
+git pull
+docker compose up -d          # add --build if requirements.txt or Dockerfile changed
+cd frontend
+npm run dev                   # run npm install first if package.json changed
+```
+
+After making changes:
+```powershell
+git add .
+git commit -m "what you changed"
+git pull
+git push
+```
+
+Stop everything with `docker compose down`. **Never use `down -v`**, because it deletes the database.
+
+Useful links: API docs at http://localhost:8000/docs · backend logs with `docker compose logs backend -f`
 
 ---
 
-## Key References
+## Where to make changes
 
-1. Li et al., *A contextual-bandit approach to personalized news article recommendation*, WWW '10. (LinUCB)
-2. Zhang et al., *Composing Parameter-Efficient Modules with Arithmetic Operations*, NeurIPS 2023.
-3. Huang et al., *LoraHub: Efficient Cross-Task Generalization via Dynamic LoRA Composition*, arXiv 2023.
-4. Lim et al., *Personalized Learning Path Planning through Goal-Driven Learner State Modeling*, WWW '26. (Pxplore)
+### Adding a new backend module (e.g. onboarding quiz, chat)
+1. Create a new file in `backend/app/`, e.g. `onboarding.py`, with its own `router = APIRouter(prefix="/api/onboarding")`.
+2. Register it in `backend/app/main.py`: `app.include_router(onboarding_router)`.
+3. New collection? Add it in `backend/app/db.py` (e.g. `questions = db["onboarding_questions"]`), and any index in `init_indexes()`.
+4. Route needs a logged-in user? Add `user: dict = Depends(current_user)` (import it from `.auth`).
+5. New Python package? Add it to `backend/requirements.txt`, then run `docker compose up --build -d`.
 
----
+All backend URLs start with `/api/...`. Python file edits reload automatically, so no restart is needed.
 
-## Team
+### Adding a new screen
+1. Create the page in `frontend/src/pages/`, e.g. `ProfilePage.tsx`.
+2. Add its route in `frontend/src/App.tsx`: `<Route path="/profile" element={<ProfilePage />} />`.
+3. Shared UI pieces go in `frontend/src/components/`.
 
-| Name | Roll No. |
-|---|---|
-| Muhammad Ibrahim | 23L-0521 |
-| Bisma Amir | 23L-0659 |
-| Maryum Nauman | 23L-0696 |
+### Connecting a screen to the backend
+- Add a function for the new endpoint in `frontend/src/api.ts`, not inside the page, so every API call stays in one place.
+- For routes that need login, send the saved token in a header:
+  `Authorization: Bearer ${localStorage.getItem("token")}`
 
-Advisor: Dr. Hajra Waheed
+### Adding a setting or secret (e.g. an API key)
+- Add it to `.env` (your own value) **and** to `.env.example` (placeholder only), so teammates know it exists.
+- Read it in Python with `os.environ["NAME"]`.
+
+### Rules
+- Never commit `.env` or `node_modules`.
+- Pull before you push.
+- Keep the report's data dictionary (Section 4.9) in sync when you add or rename collection fields.
