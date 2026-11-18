@@ -1980,9 +1980,38 @@ DiploMind is built as a pipeline of connected components. News articles are firs
 
 \subsection{Database Setup and Frontend--Backend Integration}
 \label{subsec:impl-db}
+This part of the implementation sets up the development environment, the database and user authentication.
+
+\subsubsection{Development Environment}
+We use Docker Compose so everyone on the team works on the same setup. One file starts two containers, a MongoDB database that keeps its data safely and a FastAPI backend in Python that reloads when the code changes. The code is shared through GitHub.
+
+\subsubsection{Database Design}
+The user data is kept in the database of a MongoDB instance. Each user record has a name, email, hashed password, language, knowledge level and login time. Duplicate accounts on the same email address are not allowed. A new account has no data initially, the onboarding quiz fills language and depth later.
+
+\subsubsection{User Registration and Login}
+There are three REST endpoints for backend: signup, login, and get logged in user's profile. Passwords are saved only as salted bcrypt hashes. Sessions use JWT tokens that last 24 hours and the token check is shared so future endpoints can reuse.
+
+\subsubsection{Frontend Integration}
+The frontend is built in react with Vite and Tailwind CSS. The signup and login screens are connected with backend. After sign up users go to onboarding quiz and after log in the users go to chat page and if the quiz is not completed they go to quiz page. Backend errors show on the form, and browser saves token so users stay logged in.
 
 \subsection{Adapter Training}
 \label{subsec:impl-adapters}
+This part describes how the LoRA adapters of DiploMind were implemented and trained. 
+
+\subsubsection{Base Model and Method}
+All adapters are LoRA adapters trained on the official Llama 3.1 8B Instruct model. The base model is kept frozen and loaded in 4-bit NF4 quantization (QLoRA) using the Transformers, PEFT and bitsandbytes libraries, which makes it possible to train on a single 16\,GB NVIDIA RTX A4000 GPU. Each adapter uses rank of 16, alpha of 32 and dropout of 0.05.
+
+\subsubsection{Adapters Trained}
+Three language(English, Urdu, Urdish) and three depth adapters(Easy, medium, technical) were trained, each on its own data of almost 1398 rows and at combination time one language and one depth adapter are combined to form nine adapter pairs. Nine joint adapters were also trained on almost 466 rows each using same script and settings for comparison.
+
+\subsubsection{Data Format and Split}
+Each example is a prompt with a system message, an instruction giving the language and reader level, news article, and reference explanation. The model learns only from explanation with the maximum length of 3072 tokens. The articles are split into 80\% training, 10\% validation and 10\% test with fixed seed. We made sure no test article leaks into training. 
+
+\subsubsection{Training Setup}
+We trained the adapters for at most 2 epochs, using the AdamW optimizer with learning rate $2\times10^{-4}$, and batch size of 1, with gradients added up over 8 steps. Every 25 steps we looked at validation loss. If it didn’t get better for 3 checks in a row, training stopped, and whichever checkpoint had lowest validation loss became the final adapter.
+
+\subsubsection{Training Pipeline}
+All dataset folders were trained with one script. If a run gets interrupted it picks up where it left as it saves checkpoints as it goes. It also clears the GPU memory before starting next adapter. Every adapter is stored on its own so we can load it alone or combine them with others without training.
 
 
 \begin{comment}
