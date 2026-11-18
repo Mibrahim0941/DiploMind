@@ -1,4 +1,5 @@
 \documentclass{FastFyp}
+\usepackage{array}
 
 \begin{document}
 \newcommand{\supervisor}{Dr. Hajra Waheed}
@@ -76,9 +77,9 @@ International Relations (IR) and current-affairs content available to Pakistani 
 \pagebreak 
 
 \section*{Executive Summary}
-Most international relations (IR) and current-affairs content available to Pakistani readers is written in English, at a single level of difficulty, for a single kind of reader. News reports assume the reader already knows the background, and think-tank writing assumes specialist knowledge. Readers who are more comfortable in Urdu or Urdish (Urdu written in Roman script and mixed with English words), or who need more or less background than the text provides, are left to struggle or give up. Nothing in these sources checks whether the reader actually understood what they read.
+Most IR and current-affairs content available to Pakistani readers is written in English, at a single level of difficulty, for a single kind of reader. News reports assume the reader already knows the background, and think-tank writing assumes specialist knowledge. Readers who are more comfortable in Urdu or Urdish, or who need more or less background than the text provides, are left to struggle or give up. Nothing in these sources checks whether the reader actually understood what they read.
 
-We are building DiploMind, a web-based adaptive learning platform, to address this gap. A reader asks a question about International Relations through a chat interface and receives an explanation in their preferred language (English, Urdu or Urdish) and at a suitable level of depth (easy, medium or technical). Each explanation is generated from retrieved news and think-tank articles, and the sources are displayed alongside it. The reader’s profile is not fixed at sign-up. Instead, short quizzes after some explanations will measure how well the reader understood it. DiploMind will use these results to keep refining its choice of language, depth and explanation style. The project falls under the NLP domain and supports SDG 4 (Quality Education).
+We are building DiploMind, a web-based adaptive learning platform, to address this gap. A reader asks a question about IR through a chat interface and receives an explanation in their preferred language (English, Urdu or Urdish) and at a suitable level of depth (easy, medium or technical). Each explanation is generated from retrieved news and think-tank articles, and the sources are displayed alongside it. The reader’s profile is not fixed at sign-up. Instead, short quizzes after some explanations will measure how well the reader understood it. DiploMind will use these results to keep refining its choice of language, depth and explanation style. The project falls under the Natural Language Processing (NLP) domain and supports Sustainable Development Goal (SDG) 4 (Quality Education).
 
 How it works is that a knowledge base is built from scraped Pakistani and international sources in both english and urdu. When a new user arrives, he has to take a short onboarding quiz that identifies which group, out of the 9 groups, does he belong to. The 9 groups being a combination of three languages and three depths. A single base model serves all groups and six Low Rank adapters are trained separately and combined at generation time using mathematical composition operations. This avoids training nine separate models, one for each group. A contextual bandit (LinUCB) chooses the adapter pair for each reader, and it is restricted to the reader's current pair and its neighbours so that no one is shown an explanation far above or below their level. The quiz results become a reward that updates the bandit straight away. The rewards are also used by a drift monitor that compares each reader with its group and moves readers who were placed wrongly, and they are stored so that the shared adapters can be improved in batches offline.
 
@@ -88,7 +89,7 @@ The rest of this report is organized as follows. Chapter~1 introduces the projec
 
 At the time of writing, the scraping pipelines have been built and are collecting articles from BBC News, BBC Urdu, Dawn, Express, Geo and ISSI. Requirements, use cases, architecture and sequence diagrams are complete, and the interface screens (sign-up, sign-in, onboarding quiz, chat and post-explanation quiz) have been designed. The main work still ahead is adapter training, integrating the bandit and drift monitor, and evaluation. 
 
-DiploMind is scoped as a working MVP that runs on a single 16\,GB GPU. Voice interaction and production-scale deployment are left as future work. The main risks are the quality of LLM-generated Urdu and Urdish training data, the noise in quiz-based rewards and the compute cost of reinforcement-learning updates. We manage them through native-speaker review, difficulty-weighted rewards, simulated learners for testing, and simpler fallback options at each step. If successful, DiploMind will give Pakistani readers IR and current-affairs explanations that match their language and background, and will improve its explanations as it learns what each reader understands.
+DiploMind is scoped as a working Minimum Viable Product (MVP) that runs on a single 16\,GB GPU. Voice interaction and production-scale deployment are left as future work. The main risks are the quality of Urdu and Urdish training data generated by a Large Language Model (LLM), the noise in quiz-based rewards and the compute cost of reinforcement-learning updates. We manage them through native-speaker review, difficulty-weighted rewards, simulated learners for testing, and simpler fallback options at each step. If successful, DiploMind will give Pakistani readers IR and current-affairs explanations that match their language and background, and will improve its explanations as it learns what each reader understands.
 \pagebreak
 
 
@@ -106,46 +107,51 @@ DiploMind is scoped as a working MVP that runs on a single 16\,GB GPU. Voice int
 
 
 \chapter{Introduction}
-Following international relations (IR) and current affairs matters for anyone who wants to understand what is happening in the world and how it affects their own country. In Pakistan, though, the content available for this is not written with the reader in mind. News coverage reports events and assumes the reader already knows the background. Academic and think-tank writing supplies that background, but in dense, English-only prose meant for specialists. Both produce one fixed version of their content for everyone.
+Following IR and current affairs matters for anyone who wants to understand what is happening in the world and how it affects their own country. In Pakistan, though, the content available for this is not written with the reader in mind. News coverage reports events and assumes the reader already knows the background. Academic and think-tank writing supplies that background, but in dense, English-only prose meant for specialists. Both produce one fixed version of their content for everyone.
 
-This is made harder by how Pakistani readers actually use language. Many move between formal English, formal Urdu, and Urdish (Roman Urdu mixed with English, common online) depending on what feels natural. Readers also differ in how much they already know, so the same article can be too basic for one person and too difficult for another. There is no easy way to get the same content in a form that suits you, and nothing checks whether you actually understood it.
+This is made harder by how Pakistani readers actually use language. Many move between formal English, formal Urdu, and Urdish depending on what feels natural. Readers also differ in how much they already know, so the same article can be too basic for one person and too difficult for another. There is no easy way to get the same content in a form that suits them, and nothing checks whether they actually understood it.
 
-DiploMind is built to address this. It is an adaptive learning platform that gives each reader explanations of IR and current-affairs topics in the language and depth that suit them. A short onboarding quiz gives a new user a starting level. This level is not kept fixed, results from short quizzes after some explanations are used to keep adjusting it. Explanations are generated by a large language model with separate adapters for language and depth, using documents from a knowledge base collected from news and think-tank sources.
+DiploMind is built to address this. It is an adaptive learning platform that gives each reader explanations of IR and current-affairs topics in the language and depth that suit them. A short onboarding quiz gives a new user a starting level. This level is not kept fixed, results from short quizzes after some explanations are used to keep adjusting it. Explanations are generated by an LLM with separate adapters for language and depth, using documents from a knowledge base collected from news and think-tank sources.
 \section{Purpose of this Document}
 The purpose of this document is to present our approach towards building a platform that helps Pakistani
-readers understand International Relations (IR) and current affairs content in their preferred language and at a level of depth they understand. It is a web based application that will help readers who find existing news and academic writing either too difficult or too basic, and also those who are more comfortable in Urdu or Urdish than in English. The main aim of this project is to develop a user-friendly MVP (Minimum Viable Product) that profiles a new reader through a short onboarding quiz, delivers explanations adapted to their language and depth, and keeps refining that profile using quiz feedback. Our project belongs to the NLP (Natural Language Processing) domain since it uses a large language model with separate language and depth adapters to generate explanations from a knowledge base of news and think-tank content. The research question that we aim to answer is: ``Can we develop an adaptive platform that personalizes the language and explanation depth of IR and current-affairs content for each reader, and keeps correcting its assumptions about that reader using quiz feedback?''. This report presents the vision, related work, requirements, proposed approach, and design of our project.
+readers understand IR and current affairs content in their preferred language and at a level of depth they understand. It is a web based application that will help readers who find existing news and academic writing either too difficult or too basic, and also those who are more comfortable in Urdu or Urdish than in English. The main aim of this project is to develop a user-friendly MVP that profiles a new reader through a short onboarding quiz, delivers explanations adapted to their language and depth, and keeps refining that profile using quiz feedback. Our project belongs to the NLP domain since it uses an LLM with separate language and depth adapters to generate explanations from a knowledge base of news and think-tank content. The research question that we aim to answer is: ``Can we develop an adaptive platform that personalizes the language and explanation depth of IR and current-affairs content for each reader, and keeps correcting its assumptions about that reader using quiz feedback?'' This report presents the vision, related work, requirements, proposed approach, design, implementation, and experimental results of our project.
 \section{Intended Audience}
-This report is written mainly for our supervisor and the evaluation panel, who will judge whether the project is well defined and technically sound. For this reason, it states requirements and design decisions clearly and explains the reasoning behind them. It assumes a computer science background, but not prior knowledge of international relations or of the specific techniques used, such as adapters and contextual bandits, which are explained where they first appear.
+This report is written mainly for our supervisor and the evaluation panel, who will judge whether the project is well defined and technically sound. For this reason, it states requirements and design decisions clearly and explains the reasoning behind them. It assumes a computer science background, but not prior knowledge of IR or of the specific techniques used, such as adapters and contextual bandits, which are explained where they first appear.
 
 A secondary audience is future students or developers who may extend the system, and who will mainly need the requirements and design chapters. This report is not written for the learners who will use DiploMind. They are covered as users in the requirements chapter.
 \section{Definitions, Acronyms, and Abbreviations}
 The important definitions, acronyms, and abbreviations used in this document are listed below:
 
-\textbf{IR}: International Relations\\
-\textbf{FYP}: Final Year Project\\
-\textbf{SDG}: Sustainable Development Goal\\
-\textbf{LLM}: Large Language Model\\
-\textbf{LoRA}: Low-Rank Adaptation\\
-\textbf{LinUCB}: Linear Upper Confidence Bound\\
-\textbf{GRPO}: Group Relative Policy Optimization\\
-\textbf{RSS}: Really Simple Syndication, a standard feed format through which websites publish their latest articles\\
-\textbf{UI}: User Interface\\
-\textbf{API}: Application Programming Interface\\
-\textbf{Urdish}: Urdu written in Roman script and mixed with English words, as commonly used online in Pakistan\\
-\textbf{Adapter}: A small set of extra trained weights added to a language model to change its behaviour without retraining the whole model\\
-\textbf{Depth}: How much background and detail an explanation gives (easy, medium, or technical)\\
-\textbf{Cold start}: The problem of personalizing for a new user who has no history yet\\
-\textbf{Drift}: When a learner's real needs no longer match the group they were first placed in\\
-\textbf{Knowledge base}: The collection of scraped articles and papers that answers are based on
+IR: International Relations\\
+FYP: Final Year Project\\
+SDG: Sustainable Development Goal\\
+LLM: Large Language Model\\
+LoRA: Low-Rank Adaptation\\
+LinUCB: Linear Upper Confidence Bound\\
+GRPO: Group Relative Policy Optimization\\
+MVP: Minimum Viable Product\\
+NLP: Natural Language Processing\\
+RSS: Really Simple Syndication, a standard feed format through which websites publish their latest articles\\
+UI: User Interface\\
+API: Application Programming Interface\\
+Urdish: Urdu written in Roman script and mixed with English words, as commonly used online in Pakistan\\
+Adapter: A small set of extra trained weights added to a language model to change its behaviour without retraining the whole model\\
+Depth: How much background and detail an explanation gives (easy, medium, or technical)\\
+Cold start: The problem of personalizing for a new user who has no history yet\\
+Drift: When a learner's real needs no longer match the group they were first placed in\\
+Knowledge base: The collection of scraped articles and papers that answers are based on\\
+RAG: Retrieval-Augmented Generation\\
+OCR: Optical Character Recognition
+
 \section{Conclusion}
-This chapter introduced the problem of one-size-fits-all International Relations and current-affairs content for Pakistani readers, and presented DiploMind as an adaptive platform that personalizes the language and depth of explanations. The rest of this report is organized as follows. Chapter 2 states the problem, the goals and objectives, and the scope of the project. Chapter 3 reviews related work on adapter composition, personalization, bandit-based selection, retrieval, and multilingual text. Chapter 4 specifies the requirements, use cases, interface screens, database design, and risks. Chapter 5 describes the methodology, from dataset construction and adapter training to retrieval, adapter selection, reward design, and drift detection. Chapter 6 presents the architecture and design of the system, including its diagrams and design policies.
+This chapter introduced the problem of one-size-fits-all IR and current-affairs content for Pakistani readers, and presented DiploMind as an adaptive platform that personalizes the language and depth of explanations. The rest of this report is organized as follows. Chapter 2 states the problem, the goals and objectives, and the scope of the project. Chapter 3 reviews related work on adapter composition, personalization, bandit-based selection, retrieval, and multilingual text. Chapter 4 specifies the requirements, use cases, interface screens, database design, and risks. Chapter 5 describes the methodology, from dataset construction and adapter training to retrieval, adapter selection, reward design, and drift detection. Chapter 6 presents the architecture and design of the system, including its diagrams and design policies. Chapter 7 describes implementation of the modules built so far and how they were tested. Chapter 8 presents the experimental results including base model selection and the training and evaluation of the language and depth adapters.
 
 
 
 \chapter{Project Vision}
 In Pakistan, keeping up with IR and current affairs is unnecessarily difficult. Most sources present the same content in the same way to everyone, whether the reader is a first-time learner or has years of background, and whether they are most comfortable in English, Urdu, or a mix of both. As a result, many readers struggle to follow what they read, lose interest, or finish a piece without really understanding it. To address this, DiploMind which is an adaptive learning platform aims to give each reader explanations that suit their language preference and prior IR knowledge. It check their understanding through short quizzes, and keep refining what it knows about the reader over time. Our vision is to make IR and current affairs literacy more accessible and meaningful for Pakistani readers.
 \section{Problem Domain Overview}
-IR and current affairs content in Pakistan is written with aspecific kind of reader profile in mind, and most real readers do not match that profile. News coverage usually assumes the reader already knows the background of a story, so newcomers are left without the context they need. On the other hand, academic IR writing is dense, mostly in English, and is written for specialists rather than learners. Neither takes into account that Pakistani readers move naturally between English, Urdu, and Urdish depending on what feels comfortable.
+IR and current affairs content in Pakistan is written with a specific kind of reader profile in mind, and most real readers do not match that profile. News coverage usually assumes the reader already knows the background of a story, so newcomers are left without the context they need. On the other hand, academic IR writing is dense, mostly in English, and is written for specialists rather than learners. Neither takes into account that Pakistani readers move naturally between English, Urdu, and Urdish depending on what feels comfortable.
 
 A second gap is that these sources have no way of checking whether a reader has understood what they read. Readers can skim an article from start to finish and never find out whether they missed the point, and the source never learns whether its explanation was too difficult or too basic for them.
 
@@ -160,7 +166,7 @@ Readers of IR and current-affairs content in Pakistan have no easy way to find m
 The problem described above can be broken down into the following sub-problems.
 
 \subsection{Scattered and Uneven Content}
-Material on International Relations and current affairs is spread across many Pakistani and international sources, in different languages and at very different levels of difficulty. There is little foundational content for beginners, and readers have no single place where relevant material is collected and organized.
+Material on IR and current affairs is spread across many Pakistani and international sources, in different languages and at very different levels of difficulty. There is little foundational content for beginners, and readers have no single place where relevant material is collected and organized.
 
 \subsection{Mismatch of Language and Depth}
 Pakistani readers move between English, Urdu, and Urdish depending on the topic and their comfort. Most content, however, is fixed in one language and assumes one level of background, so readers either struggle with it or lose interest.
@@ -169,10 +175,10 @@ Pakistani readers move between English, Urdu, and Urdish depending on the topic 
 A first-time user has no reading history, so there is no basis for judging their language comfort or how much they already know. Without a starting point, the first experience is likely to be a poor fit.
 
 \subsection{No Check on Understanding}
-Existing sources do not confirm whether a reader has understood what they read. There is no difference between skimming and truly understanding it, so neither the reader nor the publisher can distinguish between them.
+Existing sources do not confirm whether a reader has understood what they read. Nothing separates skimming from truly understanding, so neither the reader nor the publisher can distinguish between them.
 
 \subsection{Changing Reader Needs}
-A reader's language comfort and knowledge change as they learn.If we test them only once, that result soon becomes outdated, so content that suited a reader at the start may later become too easy or too difficult later.
+A reader's language comfort and knowledge change as they learn. If we test them only once, that result soon becomes outdated, so content that suited a reader at the start may later become too easy or too difficult.
 
 
 \section{Goals and Objectives}
@@ -186,7 +192,7 @@ The objectives of this project are:
 \begin{itemize}
     \item To build a knowledge base of current affairs and foundational IR content that is updated regularly, using both Pakistani and international sources in English and Urdu.
     \item To personalize content for each reader by adjusting its language and depth according to their profile.
-    \item a short diagnostic quiz places new users in a suitable starting profile so that the content they see initially matches their level reasonably well.
+    \item A short diagnostic quiz places new users in a suitable starting profile so that the content they see initially matches their level reasonably well.
     \item To develop an adapter based model that can generate explanations in different registers and at different levels of depth.
     \item To check comprehension through periodic quizzes and use the results as a feedback loop to keep each reader's profile up to date.
     \item To detect when a reader's profile no longer matches their level and move them to a more suitable one.
@@ -197,17 +203,17 @@ The project consists of two phases, the research phase and the development phase
 
 The research phase involves a comprehensive literature review to gather insights and best practices from existing work on personalization and adaptive learning. Additionally, the phase involves identifying local and international sources of current-affairs and foundational IR content that will serve as the knowledge base for our project.
 
-The second phase consists of the development stage.Our project aims to develop an adaptive learning platform for IR and current affairs literacy. To achieve this, we will build a data pipeline that collects and prepares content from these sources. We will also develop a personalization system to adapt the language and depth of this content to each reader, with new readers first taking a short diagnostic quiz. Lastly, a feedback mechanism based on periodic quizzes will be used to keep refining each reader’s profile over time.
+The second phase consists of the development stage. Our project aims to develop an adaptive learning platform for IR and current affairs literacy. To achieve this, we will build a data pipeline that collects and prepares content from these sources. We will also develop a personalization system to adapt the language and depth of this content to each reader, with new readers first taking a short diagnostic quiz. Lastly, a feedback mechanism based on periodic quizzes will be used to keep refining each reader’s profile over time.
 
 The scope does not include voice based interaction or production scale deployment. Hence, these are left as future work.
 
 \section{Sustainable Development Goals}
- Diplomind supports Sustainable Development Goal (SDG) 4, Quality Education, shown in Figure~\ref{fig:sdg4}. It adapts content to each reader’s language and background and checks whether they have understood it, which makes learning about IR more inclusive and easier to access. This matters most for readers in Pakistan, many of whom are not well served by material written mainly in English.
+DiploMind supports SDG 4, Quality Education, shown in Figure~\ref{fig:sdg4}. It adapts content to each reader’s language and background and checks whether they have understood it, which makes learning about IR more inclusive and easier to access. This matters most for readers in Pakistan, many of whom are not well served by material written mainly in English.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.2\textwidth]{Figures/sgd.png}
-    \caption{SDG 4}
+    \caption[SDG 4: Quality Education]{SDG 4: Quality Education \cite{un_sdg4}}
     \label{fig:sdg4}
 \end{figure}
 
@@ -223,21 +229,25 @@ The following section reviews previous research related to the chosen topic and 
 \section{Definitions, Acronyms, and Abbreviations}
 The important definitions, acronyms and abbreviations used in this chapter are listed below:
 
-\textbf{PEM}: Parameter-Efficient Module\\
-\textbf{(IA)$^3$}: Infused Adapter by Inhibiting and Amplifying Inner Activations\\
-\textbf{RTE}: Recognizing Textual Entailment\\
-\textbf{CMA-ES}: Covariance Matrix Adaptation Evolution Strategy\\
- \textbf{MDP}: Markov Decision Process\\
- \textbf{RLHF}: Reinforcement Learning from Human Feedback\\
- \textbf{P-RLHF}: Personalized Reinforcement Learning from Human Feedback\\
- \textbf{DPO}: Direct Preference Optimization\\
- \textbf{P-DPO}: Personalized Direct Preference Optimization\\
-\textbf{P-SOUPS}: Personalized-Soups\\
-\textbf{BLEU}: Bilingual Evaluation Understudy\\
-\textbf{METEOR}: Metric for Evaluation of Translation with Explicit ORdering
+PEM: Parameter-Efficient Module\\
+(IA)$^3$: Infused Adapter by Inhibiting and Amplifying Inner Activations\\
+RTE: Recognizing Textual Entailment\\
+CMA-ES: Covariance Matrix Adaptation Evolution Strategy\\
+ MDP: Markov Decision Process\\
+ RLHF: Reinforcement Learning from Human Feedback\\
+ P-RLHF: Personalized Reinforcement Learning from Human Feedback\\
+ DPO: Direct Preference Optimization\\
+ P-DPO: Personalized Direct Preference Optimization\\
+P-SOUPS: Personalized-Soups\\
+BLEU: Bilingual Evaluation Understudy\\
+METEOR: Metric for Evaluation of Translation with Explicit ORdering\\
+PPO: Proximal Policy Optimization\\
+EKT: Exercise-Enhanced Knowledge Tracing\\
+DKT: Deep Knowledge Tracing\\
+AUC: Area Under the Curve
 
 \section{Detailed Literature Review} 
-This section covers notable literature published in the domains relevant to an adaptive multilingual learning platform for international relations. These include composing and routing parameter-efficient adapters for large language models to serve different languages (English, Urdu, and Urdish) and explanation depths, selecting the best adapter for each type of learner, and using reinforcement learning from learner feedback, such as quiz results, to improve tutoring systems.
+This section covers notable literature published in the domains relevant to an adaptive multilingual learning platform for IR. These include composing and routing parameter-efficient adapters for LLMs to serve different languages (English, Urdu, and Urdish) and explanation depths, selecting the best adapter for each type of learner, and using reinforcement learning from learner feedback, such as quiz results, to improve tutoring systems.
 
  \subsection{Composing Parameter-Efficient Modules with Arithmetic Operations}
  A training-free method that merges separately trained LoRA modules through addition and negation in weight space, so their skills can be combined or removed without extra training.
@@ -248,7 +258,7 @@ This section covers notable literature published in the domains relevant to an a
 One of the strengths of this research lies in its training-free approach, which allows new capabilities to be created cheaply from existing modules, and in its practical finding on shared initialization. However, most experiments use small or mid-sized models (RoBERTa, T5, GPT-2), with only the detoxification experiment at LLM scale. The approach only works when all modules share the same architecture, and the scaling factor $\lambda$ has to be tuned by hand. The tasks tested do not include combining language and writing style adapters.
 
 \subsubsection{Relationship to the proposed research work}
-This paper directly supports the adapter design of our project. We train three language adapters (English, Urdu, Urdish) and three depth adapters (easy, amateur, technical) separately and combine them to cover nine user clusters. The paper shows that linear combination of separately trained LoRAs is feasible without training nine joint adapters. Its finding on shared initialization also guides how we train our adapters.
+This paper directly supports the adapter design of our project. We train three language adapters (English, Urdu, Urdish) and three depth adapters (easy, medium, technical) separately and combine them to cover nine user clusters. The paper shows that linear combination of separately trained LoRAs is feasible without training nine joint adapters. Its finding on shared initialization also guides how we train our adapters.
 
 \subsection{LoraHub: Efficient Cross-Task Generalization via Dynamic LoRA Composition}
 A framework that automatically combines many pre-trained LoRA modules into one, using a few examples of a new task and no gradient updates.
@@ -264,7 +274,7 @@ One of the strengths of this research is how efficient it is, mainly because the
 \subsection{From Problem-Solving to Teaching Problem-Solving: Aligning LLMs with Pedagogy using Reinforcement Learning}
 An online reinforcement learning framework trains a 7B tutor LLM on simulated student dialogues, rewarding both the student's solve rate and the tutor's pedagogical quality. It raised student solve rate from 11.3\% to 25.3\% while cutting answer leakage from 29.3\% to 10.6\%.
  \subsubsection{Summary of the research item}
- The work of Dinucu-Jianu et al. \cite{dinucujianu2025teaching} investigated how to turn a problem solving LLM into an effective tutor using online reinforcement learning. They framed multi-turn tutoring as a Markov Decision Process in which a tutor LLM (initialized from Qwen2.5-7B-Instruct) holds simulated conversations with a fixed student LLM (Llama-3.1-8B-Instruct) about math problems from the Big-Math dataset. After each conversation, the system calculates a reward based on two things: whether the student can actually solve the problem afterward, and how good the tutor's teaching style was which is scored by a judge LLM. The reward also punishes the tutor if it just leaks the answer straight away, and a parameter $\lambda$ controls the balance between learning outcomes and pedagogical quality. The study showed that training directly on these rewards lets a small open model learn to guide students step by step instead of giving away answers, without human supervision.
+ The work of Dinucu-Jianu et al. \cite{dinucujianu2025teaching} investigated how to turn a problem solving LLM into an effective tutor using online reinforcement learning. They framed multi-turn tutoring as a MDP in which a tutor LLM (initialized from Qwen2.5-7B-Instruct) holds simulated conversations with a fixed student LLM (Llama-3.1-8B-Instruct) about math problems from the Big-Math dataset. After each conversation, the system calculates a reward based on two things: whether the student can actually solve the problem afterward, and how good the tutor's teaching style was which is scored by a judge LLM. The reward also punishes the tutor if it just leaks the answer straight away, and a parameter $\lambda$ controls the balance between learning outcomes and pedagogical quality. The study showed that training directly on these rewards lets a small open model learn to guide students step by step instead of giving away answers, without human supervision.
 
 \subsubsection{Critical analysis of the research item}
 One of the strengths of this research is how the reward is structured, which is based on what the student actually achieves after the dialogue and not only on how good the tutor's reply looks. The weight $\lambda$ lets the trade off between student success and teaching quality be set explicitly, and the results show a clear balance between the two. The method also needs no human-annotated tutoring data, and it preserves the base model's reasoning ability better than supervised fine-tuning, which dropped by 7.5 points on GSM8K. However, all students and rewards are generated by LLMs, so the results have not been validated with real learners, and the use of a single student model does not reflect the variety of real students. The experiments cover only mathematics in English and use one tutoring policy for all students, so there is no adaptation to a learner's background or language. The reward is also measured right after the dialogue, so it does not capture long-term retention, and training needs substantial compute resources.
@@ -305,7 +315,7 @@ Jang et al. \cite{jang2023personalized} address how to personalize a language mo
 
 
 \subsubsection{Critical analysis of the research item}
-One of the strengths of this research lies in its linear scaling, since each new preference needs only one new model and unseen combinations are composed at inference. It also showed that merging outperforms multi-task fine-tuning and that prompting alone cannot integrate multiple preferences. However, preferences are predefined, declared by the user and fixed, and the authors acknowledge that real preferences change over time but do not address it. Annotators are simulated by GPT-4, the human study has only 24 crowdworkers, the two judges disagree on the best method, and the evaluation covers only 50 prompts, one 7B model and English. Factual accuracy is not measured, the merge weights are set by hand, and it is a preprint.
+One of the strengths of this research lies in its linear scaling, since each new preference needs only one new model and unseen combinations are composed at inference. It also showed that merging outperforms multi-task fine-tuning and that prompting alone cannot integrate multiple preferences. However, preferences are predefined, declared by the user and fixed, and the authors acknowledge that real preferences change over time but do not address it. Annotators are simulated by GPT-4, the human study has only 24 crowdworkers, the two judges disagree on the best method, and the evaluation covers only 50 prompts, one 7B model and English. Factual accuracy is not measured, the merge weights are set by hand.
 
 
 \subsubsection{Relationship to the proposed research work}
@@ -322,12 +332,12 @@ Li et al. \cite{li2010contextual} talks about personalized recommendation where 
 The algorithm has a fixed bound with a parameter and is easy to use. When the data is limited, its uncertainty driven exploration performs better than random exploration. It also manages new users and thus, the offline evaluation is unbiased and the reward is a click. This approach assumes constant user interests and linear feedback over built in features. As the offline evaluation requires randomly logged data and all tests come from a single news service, it was hard to fix warm starting from an offline model.
 
 \subsubsection{Relationship to the proposed research work}
-This work is closely related to the adaptation module of Diplomind, which selects the language and depth adapter combination for every user group using LinUCB. It describes the approach and the role of $\alpha$ The hybrid model serves as backup for groups with less data. The warm start outcome warns about how to set up each of the nine groups. The users are moved to the incorrect group by drift detection and the reward is received through quiz performance rather than clicks.
+This work is closely related to the adaptation module of Diplomind, which selects the language and depth adapter combination for every user group using LinUCB. It describes the approach and the role of $\alpha$ The hybrid model serves as backup for groups with less data. The warm start outcome warns about how to set up each of the nine groups. Drift detection moves users who were placed in wrong group and the reward is received through quiz performance rather than clicks.
 
 
 
 \subsection{LPITutor: an LLM based Personalized Intelligent Tutoring System using RAG and Prompt Engineering}
-A tutoring system that grounds a pre trained LLM in course documents through retrieval augmented generation and personalizes its answers through learner aware prompts, evaluated on questions at beginner, intermediate and advanced levels.
+A tutoring system that grounds a pre trained LLM in course documents through RAG and personalizes its answers through learner aware prompts, evaluated on questions at beginner, intermediate and advanced levels.
 
 
 \subsubsection{Summary of the research item}
@@ -399,7 +409,7 @@ Pxplore is closer to slower batch trained module of DiploMind. We had planned th
 A plug-and-play layer for retrieval-augmented generation that scores the retrieved documents, filters or discards them, and falls back to web search when retrieval is poor.
 
 \subsubsection{Summary of the research item}
-Yan et al. \cite{yan2024corrective} address a weakness of retrieval-augmented generation (RAG): the quality of the answer depends heavily on the retrieved documents, and standard RAG has no way to notice when retrieval has gone wrong, so irrelevant or misleading text is passed to the language model and can lead to hallucination. They propose Corrective Retrieval Augmented Generation (CRAG), a plug-and-play layer that can be added to an existing RAG system. The paper uses a small retrieval evaluator, which is a finetuned T5-large model, to judge how relevant each retrieved document is to the query. Depending on the score, the system takes one of three actions. If at least one document scores above an upper threshold, the retrieval is treated as Correct and the retrieved knowledge is kept and refined. If all documents score below a lower threshold, it is treated as Incorrect, the retrieved documents are discarded, and the system searches the web instead. Otherwise if the evaluator is not confident, the case is Ambiguous, and the refined retrieved knowledge is combined with web search results. Refinement is a decompose-then-recompose step: documents are split into short strips, the same evaluator scores each strip, and only the relevant strips are kept. For the web step, ChatGPT rewrites the query into keywords, the Google Search API returns the top five links, Wikipedia pages are preferred to reduce bias and unreliable sources, and the same refinement is applied to the pages.
+Yan et al. \cite{yan2024corrective} address a weakness of RAG: the quality of the answer depends heavily on the retrieved documents, and standard RAG has no way to notice when retrieval has gone wrong, so irrelevant or misleading text is passed to the language model and can lead to hallucination. They propose Corrective Retrieval Augmented Generation (CRAG), a plug-and-play layer that can be added to an existing RAG system. The paper uses a small retrieval evaluator, which is a finetuned T5-large model, to judge how relevant each retrieved document is to the query. Depending on the score, the system takes one of three actions. If at least one document scores above an upper threshold, the retrieval is treated as Correct and the retrieved knowledge is kept and refined. If all documents score below a lower threshold, it is treated as Incorrect, the retrieved documents are discarded, and the system searches the web instead. Otherwise if the evaluator is not confident, the case is Ambiguous, and the refined retrieved knowledge is combined with web search results. Refinement is a decompose-then-recompose step: documents are split into short strips, the same evaluator scores each strip, and only the relevant strips are kept. For the web step, ChatGPT rewrites the query into keywords, the Google Search API returns the top five links, Wikipedia pages are preferred to reduce bias and unreliable sources, and the same refinement is applied to the pages.
 
 CRAG was tested on four datasets covering short-form generation (PopQA), long-form generation (Biography, scored with FactScore), true-or-false questions (PubHealth) and multiple choice (Arc-Challenge), on top of both standard RAG and Self-RAG. Built on SelfRAG-LLaMA2-7b, it improved on standard RAG by 7.0\% accuracy on PopQA, 14.9\% FactScore on Biography, 36.6\% accuracy on PubHealth and 15.4\% accuracy on Arc-Challenge. The small T5-based evaluator judged retrieval quality better than ChatGPT, removing any one of the three actions reduced performance.
 
@@ -472,7 +482,8 @@ This paper relates to Diplomind in three ways. First, it shows that LLM based si
 \section{Literature Review Summary Table}
 Table~\ref{tab:2} gives a general overview of the papers that have been studied so far and their results.
 
-\begin{longtable}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
+\begin{small}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{4.3cm}|>{\raggedright\arraybackslash}p{4.3cm}|>{\raggedright\arraybackslash}p{3.6cm}|}
 \caption{Literature Review Summary Table}\label{tab:2}\label{tab:lit-review}\\
 \hline
 \textbf{Author} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
@@ -556,9 +567,10 @@ Best simulation accuracy among compared simulators (73.03\% vs 71.30\% for Agent
 Simulates only multiple-choice correctness from past logs; two datasets, one not yet released; modest gains over the strongest baseline; preprint \\
 \hline
 \end{longtable}
+\end{small} 
 
 \section{Conclusion}
-This chapter reviewed sixteen studies relevant to an adaptive multilingual learning platform for International Relations. The studies cover the composition of separately trained LoRA adapters, the personalization of language models to different users, the use of contextual bandits to choose between options, and the grounding of answers in retrieved evidence. They also cover the building of Roman Urdu and code-switched data, the profiling of new users, and tutoring and learner-simulation systems. Each of these techniques has been studied on its own, but most of the work is limited to English, relies on simulated users or fixed preferences, or uses rewards that do not measure whether a learner understood. None of the reviewed studies combines language and depth personalization for multilingual IR learners with correction of the learner's profile from comprehension results.
+This chapter reviewed sixteen studies relevant to an adaptive multilingual learning platform for IR. The studies cover the composition of separately trained LoRA adapters, the personalization of language models to different users, the use of contextual bandits to choose between options, and the grounding of answers in retrieved evidence. They also cover the building of Roman Urdu and code-switched data, the profiling of new users, and tutoring and learner-simulation systems. Each of these techniques has been studied on its own, but most of the work is limited to English, relies on simulated users or fixed preferences, or uses rewards that do not measure whether a learner understood. None of the reviewed studies combines language and depth personalization for multilingual IR learners with correction of the learner's profile from comprehension results.
 
 \clearpage
  
@@ -1969,14 +1981,48 @@ This chapter describes the implementation of DiploMind up to its current stage. 
 \label{sec:implementation}
 DiploMind is built as a pipeline of connected components. News articles are first collected from different sources and turned into a structured dataset, which is then used to train the language and depth adapters of the model. On the user side, an onboarding quiz is used to judge each reader's level of understanding, and its results are stored along with the rest of the user data in the application's database. The following subsections describe each of these components in the order in which they were developed.
 
-\subsection{News Data Collection and Scraping}
-\label{subsec:impl-scraping}
+\subsection{Data Collection and Article Scraping}
+Diplomind needs news articles and current news for its knowledge base for retrieval and also for adapter training dataset. For this we built a python data scraping pipeline to scrape and collect articles from various sources like Dawn, BBC English, BBC Urdu, and ISSI for foundational IR content. Al Jazeera was also tried but it is blocked in Pakistan so we dropped it. To scrape data from Dawn and BBC we used their RSS feeds and then fetched each article page to get full text. For older articles we went back through Dawn's dated archives and BBC sitemaps. As ISSI has no RSS feed so scraper goes through its archive pages to get PDF links. Then text is extracted with pdfplumber. Already scraped articles are skipped on later runs.
+
+Every article is stored in same JSON format with its source, title, URL, date, language, category and text. It is tagged as either current affairs or foundational as we need both types of data for user queries. Duplicates are removed using SHA-256 hash of URL which is also used as document ID in MongoDB. We can add more sources later if needed. Currently scraped articles are stored as JSON as well as in MongoDB. News articles were used to build adapter training dataset. ISSI content was not used because its PDF text is too noisy for training. All articles will be used later in knowledge base for retrieval.
+
 
 \subsection{Dataset Preparation for Adapter Training}
 \label{subsec:impl-dataset}
+For training our language and depth adapters, we needed news explanations in three languages (English, Urdu and Urdish) and at three depths (Easy, medium and technical). No dataset like this existed so we had to build one. We used an LLM to write explanations and used them to finetune our smaller base model.  We ran the pipeline as python notebook on Kaggle. To access Deepseek models we used Weights \& Biases (W\&B) Inference which hosts them online and also works with standard OpenAI python library.
 
-\subsection{Onboarding Quiz Generation and Integration}
-\label{subsec:impl-quiz}
+\subsubsection{Article Filtering and Preparation}
+For article filtering, Deepseek V3.1 reads each scrapped article and returns a one line summary, a topic category and a keep or drop decision. We kept news on politics, world affairs, current affairs, IR, diplomacy and economy. We dropped sports, entertainment and lifestyle related articles. Each kept article was cleaned and we extracted a chunk size of 150 to 900 words from it. This chunk sometimes started in the middle of the article. We used varied lengths as in real app, model will receive text of various different sizes. 
+
+\subsubsection{Generating the Nine Versions}
+Now to generate 9 versions (3 languages x 3 depths), each chunk goes through a chain of prompts to DeepSeek v4.1 Flash. First the model writes a short list of key facts about the chunk in Urdu. Using that list it writes the Urdu explanation at all three depths. Then from these Urdu versions, the English versions are generated. The Urdish versions are written in Roman script using both English and Urdu versions. 
+
+Each step uses few shot prompting. The model is given instructions as well as a few hand written example outputs. Special attention was given to Urdish few shot prompts as models had trouble generating those. We also manually reviewed some generated outputs to check that the facts were correct and the language sounded natural.
+
+\subsubsection{Quality Checks and Training Pairs}
+The pipeline also checked for empty or cut off text and very short answers. If any of the article’s nine versions failed it removed the whole article. Fewer than 0.3\% of outputs had problems. Each training pair has an instructions that tells which language and depth to use, the original article chunk as input and the explanation (in the desired language and depth) as output.
+
+\subsubsection{Training Sets and Split}
+After all this we had 583 article chunks and 5,247 training pairs. These were grouped into six sets, one for each language (covering all depths) and one for each depth (covering all languages). We split the data by article into 80\% training, 10\% validation and 10\% test with a fixed seed. We used the same split for all six sets due to which no test article is seen by any adapter during training. This way all adapters are compared on the same unseen articles. 
+
+\subsection{Adapter Training}
+\label{subsec:impl-adapters}
+This part describes how the LoRA adapters of DiploMind were implemented and trained. 
+
+\subsubsection{Base Model and Method}
+All adapters are LoRA adapters trained on the official Llama 3.1 8B Instruct model. The base model is kept frozen and loaded in 4-bit NF4 quantization (QLoRA) using the Transformers, PEFT and bitsandbytes libraries, which makes it possible to train on a single 16\,GB NVIDIA RTX A4000 GPU. Each adapter uses rank of 16, alpha of 32 and dropout of 0.05.
+
+\subsubsection{Adapters Trained}
+Three language(English, Urdu, Urdish) and three depth adapters(Easy, medium, technical) were trained, each on its own data of almost 1398 rows and at combination time one language and one depth adapter are combined to form nine adapter pairs. Nine joint adapters were also trained on almost 466 rows each using same script and settings for comparison.
+
+\subsubsection{Data Format}
+Each example is a prompt with a system message, an instruction giving the language and reader level, news article, and reference explanation. The model learns only from explanation with the maximum length of 3072 tokens. %The articles are split into 80\% training, 10\% validation and 10\% test with fixed seed. We made sure no test article leaks into training. 
+
+\subsubsection{Training Setup}
+We trained the adapters for at most 2 epochs, using the AdamW optimizer with learning rate $2\times10^{-4}$, and batch size of 1, with gradients added up over 8 steps. Every 25 steps we looked at validation loss. If it didn’t get better for 3 checks in a row, training stopped, and whichever checkpoint had lowest validation loss became the final adapter.
+
+\subsubsection{Training Pipeline}
+All dataset folders were trained with one script. If a run gets interrupted it picks up where it left as it saves checkpoints as it goes. It also clears the GPU memory before starting next adapter. Every adapter is stored on its own so we can load it alone or combine them with others without training.
 
 \subsection{Database Setup and Frontend--Backend Integration}
 \label{subsec:impl-db}
@@ -1994,24 +2040,76 @@ There are three REST endpoints for backend: signup, login, and get logged in use
 \subsubsection{Frontend Integration}
 The frontend is built in react with Vite and Tailwind CSS. The signup and login screens are connected with backend. After sign up users go to onboarding quiz and after log in the users go to chat page and if the quiz is not completed they go to quiz page. Backend errors show on the form, and browser saves token so users stay logged in.
 
-\subsection{Adapter Training}
-\label{subsec:impl-adapters}
-This part describes how the LoRA adapters of DiploMind were implemented and trained. 
 
-\subsubsection{Base Model and Method}
-All adapters are LoRA adapters trained on the official Llama 3.1 8B Instruct model. The base model is kept frozen and loaded in 4-bit NF4 quantization (QLoRA) using the Transformers, PEFT and bitsandbytes libraries, which makes it possible to train on a single 16\,GB NVIDIA RTX A4000 GPU. Each adapter uses rank of 16, alpha of 32 and dropout of 0.05.
 
-\subsubsection{Adapters Trained}
-Three language(English, Urdu, Urdish) and three depth adapters(Easy, medium, technical) were trained, each on its own data of almost 1398 rows and at combination time one language and one depth adapter are combined to form nine adapter pairs. Nine joint adapters were also trained on almost 466 rows each using same script and settings for comparison.
+\subsection{Onboarding Quiz Generation and Integration}
+\label{subsec:impl-quiz}
+When the user signs up, the onboarding quiz module estimates their language and knowledge level. The result gives the user their starting adapter pair.
 
-\subsubsection{Data Format and Split}
-Each example is a prompt with a system message, an instruction giving the language and reader level, news article, and reference explanation. The model learns only from explanation with the maximum length of 3072 tokens. The articles are split into 80\% training, 10\% validation and 10\% test with fixed seed. We made sure no test article leaks into training. 
+\subsubsection{Question Bank and Expert Review}
+First, we wrote multiple choice questions covering Pakistan's foreign relations, current affairs, IR concepts and organizations, security, economy, global issues and diplomacy. Every question has an ``I don't know'' option so users do not guess. We did multiple iterations through the question bank to review and update it, so that a question's answer cannot be guessed from its wording, its wrong options are believable, and it tests knowledge rather than language or memory. Then we contacted IR and political science faculty at our university and asked them to review the questions and point out any problems.
 
-\subsubsection{Training Setup}
-We trained the adapters for at most 2 epochs, using the AdamW optimizer with learning rate $2\times10^{-4}$, and batch size of 1, with gradients added up over 8 steps. Every 25 steps we looked at validation loss. If it didn’t get better for 3 checks in a row, training stopped, and whichever checkpoint had lowest validation loss became the final adapter.
+\subsubsection{Focus Group Discussion}
+We also held a focus group discussion of about 35 - 40 minutes with two faculty members, Dr.\ Tahir Rasheed and Mr.\ Raza Zaidi. We explained our project to them and got their expert opinion. They suggested that:
+\begin{itemize}
+    \item questions should be progressive, going from simple to harder on the same topic
+    \item the quiz should start with current affairs news that Pakistani users usually follow
+    \item headline topics should come first and inside page topics later
+\end{itemize}
+Based on their suggestions, we grouped the questions into topic ladders of 2 - 3 questions that get harder step by step. A user is only shown the next, harder question of a ladder if they answer the previous one correctly. Front page topics like the economy, the Iran war, Gaza, India and domestic politics come first. Questions on IR concepts are kept as standalone questions.
 
-\subsubsection{Training Pipeline}
-All dataset folders were trained with one script. If a run gets interrupted it picks up where it left as it saves checkpoints as it goes. It also clears the GPU memory before starting next adapter. Every adapter is stored on its own so we can load it alone or combine them with others without training.
+\subsubsection{Pilot Study}
+Then we did a pilot study with three Google Forms of about 19 questions each. We are gathering responses from IR or political science students (the technical group), people who follow the news regularly (the medium group) and people who do not have much interest in IR and current affairs (the easy group). The pilot is still collecting responses, and the question values are updated as more responses come.
+
+\subsubsection{Implementation}
+The questions and the language samples are kept in JSON files in our project. Every time the backend starts, it loads them into MongoDB. Each user's quiz is saved in MongoDB along with their answers, and their profile stores their final language and level.
+
+\subsubsection{Question Values}
+For our quiz algorithm, every question needs three values: the chance or probability (between 0 and 1) that an easy, a medium and a technical user answers it correctly. We call these p values and get them from the pilot study and the faculty estimates. Some questions do not have enough responses yet, so we smooth their values using Rasch model. When we gather more responses, a script recalculates the p values so they will keep improving.
+
+\subsubsection{Language Step}
+In the first part of the quiz, the user is shown a short everyday news sentence in English, Urdu and Roman Urdu, and is asked to pick the one they find easiest to read and comprehend.
+\begin{itemize}
+    \item If their answers to the first two sentences match, we save that language.
+    \item If they don't, we show a third sentence and go with the majority.
+    \item If all three are different, we directly ask the user which language they prefer.
+\end{itemize}
+Once the language is decided, the user is shown the knowledge questions in the selected language.
+
+\subsubsection{Placement Algorithm}
+The quiz keeps track of how likely the user is to be at each level. We call this the belief $B$, and it starts at $1/3$ for each level. After every answer, it is updated using Bayes' rule:
+\[
+B_L \leftarrow \frac{B_L \, p(L,q)}{Z} \quad \mbox{if the answer is correct}
+\]
+\[
+B_L \leftarrow \frac{B_L \, \left(1 - p(L,q)\right)}{Z} \quad \mbox{if it is wrong or ``I don't know''}
+\]
+Here $p(L,q)$ is the chance that a user at level $L$ gets question $q$ right (the p value estimated from pilot studies), and $Z$ makes the three values add up to 1. For example, if someone gets a question wrong that technical users usually get right, the chance of them being a technical user drops.
+
+To decide which question to ask next, the quiz chooses the one that will tell us the most about the user's level, i.e.\ the question expected to reduce our uncertainty the most. We measure uncertainty with entropy:
+\[
+H(B) = -\sum_{L} B_L \log B_L
+\]
+\[
+\mathrm{Gain}(q) = H(B) - \left[ P(\mathrm{correct})\, H(B_{\mathrm{correct}}) + P(\mathrm{wrong})\, H(B_{\mathrm{wrong}}) \right]
+\]
+where $P(\mathrm{correct}) = \sum_{L} B_L \, p(L,q)$, and $B_{\mathrm{correct}}$ and $B_{\mathrm{wrong}}$ are the beliefs after a correct or wrong answer.
+
+We also added a few rules so the quiz feels natural:
+\begin{itemize}
+    \item If the user answers correctly, they move to the next harder question on the same topic. If the answer is wrong, the topic ends and the quiz moves to a new topic.
+    \item Once we are quite sure the user is not at the easy level, new topics start from their second question (skipping basic ones).
+    \item Front page topics are asked first, and inside page and specialist topics come later.
+    \item Standalone questions are only used at the end, when two levels are still possible.
+    \item The first question is always an easy one, picked at random from a few good options.
+\end{itemize}
+The quiz ends when we are 80\% sure about one level. After minimum 4 questions and maximum 8 questions. The most likely level becomes the user’s starting level.
+
+\subsubsection{Testing}
+We tested the module with different types of users. A user who answered ``I don't know'' to every question was placed at easy after 4 questions. Users who got some questions right were placed at medium or technical.
+
+
+
 
 
 \begin{comment}
