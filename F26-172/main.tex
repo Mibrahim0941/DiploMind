@@ -2102,6 +2102,12 @@ The quiz ends when we are 80\% sure about one level. After minimum 4 questions a
 We tested the module with different types of users. A user who answered ``I don't know'' to every question was placed at easy after 4 questions. Users who got some questions right were placed at medium or technical.
 
 
+\section{Conclusion}
+This chapter discusses the implementation of DiploMind until now. There is a scraping pipeline for collecting news articles from different sources which are used to build dataset with nine versions for training the six adapters. For the application, there is a Docker based setup with FastAPI backend, MongoDB and React frontend. The onboarding quiz finds user's preferred language. Then it uses topic ladders made from teacher feedback and pilot study results, and it updates its belief as answers come in to pick a starting level for the user. The next steps are to translate the quiz questions into Urdu and Urdish and to build retrieval module, LinUCB adapter picker quiz after each explanation and drift detector.
+
+
+
+
 
 
 
